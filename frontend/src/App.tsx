@@ -794,6 +794,8 @@ I have analyzed your lecture material and am fully grounded in its source conten
           <div className="sidebar-orbit sidebar-orbit--a" />
           <div className="sidebar-orbit sidebar-orbit--b" />
           <div className="sidebar-orbit sidebar-orbit--c" />
+          <div className="sidebar-orbit sidebar-orbit--d" />
+          <div className="sidebar-orbit sidebar-orbit--e" />
         </div>
         
         {/* Sidebar Header */}

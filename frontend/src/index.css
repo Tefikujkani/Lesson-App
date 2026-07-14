@@ -95,9 +95,10 @@ img, video, iframe {
 
 .app-sidebar {
   background:
-    radial-gradient(ellipse 70% 40% at 100% 0%, rgba(182, 232, 92, 0.12), transparent 55%),
-    radial-gradient(ellipse 55% 35% at 0% 100%, rgba(124, 188, 61, 0.08), transparent 50%),
-    linear-gradient(180deg, #fbfdf8 0%, #f5f9ee 55%, #f0f6e8 100%);
+    radial-gradient(ellipse 75% 45% at 100% 0%, rgba(182, 232, 92, 0.2), transparent 58%),
+    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(124, 188, 61, 0.14), transparent 52%),
+    radial-gradient(ellipse 40% 30% at 80% 55%, rgba(200, 232, 106, 0.1), transparent 60%),
+    linear-gradient(180deg, #f8fcf2 0%, #f1f8e8 50%, #eaf4e0 100%);
   backdrop-filter: blur(14px);
   isolation: isolate;
 }
@@ -803,30 +804,48 @@ img, video, iframe {
 }
 
 .sidebar-orbit--a {
-  width: 7.5rem;
-  height: 7.5rem;
-  top: -1.5rem;
-  right: -2.5rem;
-  border-color: color-mix(in srgb, var(--accent) 26%, transparent);
-  opacity: 0.55;
+  width: 8.5rem;
+  height: 8.5rem;
+  top: -1.75rem;
+  right: -2.75rem;
+  border-color: color-mix(in srgb, var(--accent) 32%, transparent);
+  opacity: 0.62;
 }
 
 .sidebar-orbit--b {
-  width: 3.5rem;
-  height: 3.5rem;
-  bottom: 22%;
-  left: -1rem;
+  width: 4.25rem;
+  height: 4.25rem;
+  bottom: 20%;
+  left: -1.1rem;
+  border-color: color-mix(in srgb, var(--lime) 40%, transparent);
+  opacity: 0.58;
+}
+
+.sidebar-orbit--c {
+  width: 2.5rem;
+  height: 2.5rem;
+  top: 38%;
+  right: 1rem;
+  border-color: color-mix(in srgb, var(--accent-deep) 26%, transparent);
+  opacity: 0.52;
+}
+
+.sidebar-orbit--d {
+  width: 6rem;
+  height: 6rem;
+  bottom: -1.5rem;
+  right: -1.25rem;
   border-color: color-mix(in srgb, var(--lime) 34%, transparent);
   opacity: 0.5;
 }
 
-.sidebar-orbit--c {
-  width: 2.25rem;
-  height: 2.25rem;
-  top: 42%;
-  right: 1.25rem;
-  border-color: color-mix(in srgb, var(--accent-deep) 22%, transparent);
-  opacity: 0.45;
+.sidebar-orbit--e {
+  width: 1.75rem;
+  height: 1.75rem;
+  top: 22%;
+  left: 1.25rem;
+  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
+  opacity: 0.5;
 }
 
 #sidebar-curriculum > *:not(.sidebar-orbits) {
