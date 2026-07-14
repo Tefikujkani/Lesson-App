@@ -170,7 +170,6 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
           "login-orbit--d",
           "login-orbit--e",
           "login-orbit--f",
-          "login-orbit--g",
           "login-orbit--h",
           "login-orbit--i",
         ].map((orbitClass, i) => (
