@@ -17,8 +17,10 @@ export async function handleStudyChat(req: Request, res: Response, next: NextFun
     const nameVal = typeof fileName === "string" ? fileName : "reference document";
     const typeVal = typeof fileType === "string" ? fileType : "text";
     const originalTextVal = typeof originalText === "string" ? originalText : context;
+    const hasLectureContext = context.trim().length > 0;
 
-    const systemInstruction = `You are a patient, encouraging, and clear academic tutor assisting a student with their studies.
+    const systemInstruction = hasLectureContext
+      ? `You are a patient, encouraging, and clear academic tutor assisting a student with their studies.
 
 Your primary source of truth is the following study guide/notes context:
 === START STUDY GUIDE NOTES ===
@@ -41,7 +43,13 @@ Follow these strict rules when answering the student:
 4. If the study guide and original file do NOT contain the answer, you MUST explicitly state this exact sentence:
    "This wasn't covered directly in your lecture notes, but here is how it works..."
    and then proceed to answer the question accurately using your general technical and academic knowledge.
-5. Keep your tone encouraging, patient, highly structured, and easy to follow. Use bullet points and clean markdown formatting where appropriate.`;
+5. Keep your tone encouraging, patient, highly structured, and easy to follow. Use bullet points and clean markdown formatting where appropriate.`
+      : `You are a patient, encouraging, and clear academic tutor in Study Hub.
+
+The student has not selected a lecture yet, so answer from general academic knowledge.
+Help with studying strategy, explanations, examples, and clarifying any question they ask.
+Keep your tone encouraging, highly structured, and easy to follow. Use bullet points and clean markdown where appropriate.
+If useful, gently suggest uploading lecture notes on the left so answers can be grounded in their material.`;
 
     const reply = await groqChatCompletion({
       messages: [

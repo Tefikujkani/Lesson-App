@@ -226,13 +226,27 @@ export default function App() {
     }
   };
 
-  // Get current messages for active lecture (or seed default if empty)
+  const GENERAL_CHAT_ID = "__general__";
+  const activeChatId = currentLecture?.id ?? GENERAL_CHAT_ID;
+
+  // Get current messages for active lecture (or open general chat)
   const getCurrentMessages = (): Message[] => {
-    if (!currentLecture) return [];
-    
-    const history = chatHistories[currentLecture.id];
+    const history = chatHistories[activeChatId];
     if (history) return history;
-    
+
+    if (!currentLecture) {
+      return [
+        {
+          id: "welcome-general",
+          sender: "tutor",
+          text: `Hi — I'm your Study Hub tutor.
+
+Ask me anything while you get set up. When you upload a lecture on the left, I can ground answers in that material too.`,
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        },
+      ];
+    }
+
     return [
       {
         id: "welcome",
@@ -240,8 +254,8 @@ export default function App() {
         text: `Greetings! I am your academic tutor for **${currentLecture.title}**. 
 
 I have analyzed your lecture material and am fully grounded in its source content. Ask me to break down difficult concepts with clear examples, summarize sections, or clarify out-of-scope queries.`,
-        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-      }
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+      },
     ];
   };
 
@@ -252,9 +266,8 @@ I have analyzed your lecture material and am fully grounded in its source conten
     sendMessage(question);
   };
 
-  // Send message API request
+  // Send message API request (works with or without a selected lecture)
   const sendMessage = async (overrideText?: string) => {
-    if (!currentLecture) return;
     const textToSend = (overrideText || inputText).trim();
     if (!textToSend) return;
 
@@ -272,11 +285,11 @@ I have analyzed your lecture material and am fully grounded in its source conten
     };
 
     // Update state with student message
-    const currentHistory = chatHistories[currentLecture.id] || getCurrentMessages();
+    const currentHistory = chatHistories[activeChatId] || getCurrentMessages();
     const updatedHistory = [...currentHistory, studentMessage];
     setChatHistories(prev => ({
       ...prev,
-      [currentLecture.id]: updatedHistory
+      [activeChatId]: updatedHistory
     }));
 
     try {
@@ -285,10 +298,10 @@ I have analyzed your lecture material and am fully grounded in its source conten
         method: "POST",
         body: JSON.stringify({
           message: textToSend,
-          lectureContext: currentLecture.content,
-          fileName: currentLecture.fileName || `${currentLecture.title}.txt`,
-          fileType: currentLecture.fileType || "text",
-          originalText: currentLecture.originalText || currentLecture.content
+          lectureContext: currentLecture?.content || "",
+          fileName: currentLecture?.fileName || (currentLecture ? `${currentLecture.title}.txt` : undefined),
+          fileType: currentLecture?.fileType || "text",
+          originalText: currentLecture?.originalText || currentLecture?.content || ""
         })
       });
       
@@ -302,14 +315,16 @@ I have analyzed your lecture material and am fully grounded in its source conten
       const finalHistory = [...updatedHistory, tutorMessage];
       setChatHistories(prev => ({
         ...prev,
-        [currentLecture.id]: finalHistory
+        [activeChatId]: finalHistory
       }));
 
-      // Persist chat thread to MongoDB
-      apiFetch(`/api/chat/${encodeURIComponent(currentLecture.id)}`, {
-        method: "PUT",
-        body: JSON.stringify({ messages: finalHistory }),
-      }).catch((err) => console.error("Failed to save chat history:", err));
+      // Persist chat thread to MongoDB when tied to a lecture
+      if (currentLecture) {
+        apiFetch(`/api/chat/${encodeURIComponent(currentLecture.id)}`, {
+          method: "PUT",
+          body: JSON.stringify({ messages: finalHistory }),
+        }).catch((err) => console.error("Failed to save chat history:", err));
+      }
     } catch (error: any) {
       console.error("Failed to send chat message:", error);
       setErrorText(error.message || "Could not reach the AI tutor. Check server configuration.");
@@ -335,7 +350,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
 
       setChatHistories(prev => ({
         ...prev,
-        [currentLecture.id]: [...updatedHistory, errorMessage]
+        [activeChatId]: [...updatedHistory, errorMessage]
       }));
     } finally {
       setIsSending(false);
@@ -874,15 +889,42 @@ I have analyzed your lecture material and am fully grounded in its source conten
         {/* Subjects & Lectures List */}
         <nav className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-thin">
           {filteredSubjects.length === 0 ? (
-            <div className="text-center py-8 text-xs text-[#5a737a] italic font-medium space-y-3">
-              <p>No lectures loaded.</p>
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="space-y-3"
+            >
               <button
+                type="button"
                 onClick={handleSelectFileClick}
-                className="text-[10px] uppercase font-bold text-black border border-[#c5d5da] bg-white hover:bg-neutral-100 py-1 px-2.5 rounded shadow-xs"
+                className="w-full text-left border-2 border-dashed border-[#c5d5da] hover:border-[#0d8f7c] bg-white/70 hover:bg-white rounded-xl p-4 transition-all group"
               >
-                Choose File
+                <div className="flex flex-col items-center text-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-ink text-white flex items-center justify-center shadow-[0_10px_24px_-12px_rgba(13,143,124,0.45)] group-hover:scale-105 transition-transform">
+                    <UploadCloud className="w-5 h-5" />
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm font-extrabold tracking-tight text-ink">No lectures loaded</p>
+                    <p className="text-[11px] text-[#5a737a] leading-relaxed">
+                      Drop a file here or choose one to start grounding the tutor.
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center justify-center w-full bg-ink text-white text-[10px] font-bold uppercase tracking-wider py-2 rounded-lg group-hover:bg-[#076b5c] transition-colors">
+                    Choose File
+                  </span>
+                  <span className="text-[9px] uppercase tracking-widest font-bold text-[#5a737a]">
+                    PDF · text · images
+                  </span>
+                </div>
               </button>
-            </div>
+              <button
+                type="button"
+                onClick={handleLoadSamples}
+                className="w-full text-[11px] font-semibold text-[#076b5c] hover:text-ink underline underline-offset-2"
+              >
+                Load sample lectures
+              </button>
+            </motion.div>
           ) : (
             filteredSubjects.map((subject) => {
               const isExpanded = expandedSubjects[subject.id] || searchQuery.length > 0;
@@ -1020,53 +1062,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
         </div>
       </aside>
 
-      {/* 2. CENTRAL CHAT WORKSPACE / FILE DROP EMPTY STATE */}
-      {!currentLecture ? (
-        <main id="chat-workspace" className="app-main flex-1 flex flex-col overflow-hidden relative justify-center items-center p-4 sm:p-8 min-w-0">
-          {/* Mobile menu when empty */}
-          <button
-            type="button"
-            onClick={() => setMobileSidebarOpen(true)}
-            className="absolute top-3 left-3 lg:hidden p-2 rounded-lg border border-[#c5d5da] bg-white/80 text-ink z-10"
-            aria-label="Open curriculum menu"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
-          <div className="max-w-md w-full text-center space-y-6">
-            <div 
-              onClick={handleSelectFileClick}
-              className="border-2 border-dashed border-[#c5d5da] hover:border-[#0d8f7c] bg-white/55 rounded-2xl p-10 cursor-pointer transition-all hover:bg-white/80 flex flex-col items-center space-y-4"
-            >
-              <div className="w-12 h-12 rounded-xl bg-ink text-white flex items-center justify-center shadow-[0_12px_28px_-12px_rgba(13,143,124,0.35)]">
-                <UploadCloud className="w-6 h-6" />
-              </div>
-              <div className="space-y-1.5">
-                <h3 className="font-display text-xl font-extrabold tracking-tight text-ink">Drop lecture file here</h3>
-                <p className="text-xs text-[#5a737a] leading-relaxed">
-                  Or <span className="text-ink font-semibold underline decoration-[#0d8f7c]/40 underline-offset-2">browse locally</span> to upload text, notes, or chapter outlines.
-                </p>
-              </div>
-              <div className="pt-2">
-                <span className="text-[10px] text-[#5a737a] font-bold uppercase tracking-widest bg-white/70 border border-[#c5d5da] py-1.5 px-3 rounded-lg">
-                  PDF · text · images
-                </span>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex items-center justify-center space-x-2 text-xs text-[#5a737a]">
-                <span>No material ready?</span>
-                <button
-                  onClick={handleLoadSamples}
-                  className="text-[#076b5c] font-bold underline underline-offset-2 hover:text-ink"
-                >
-                  Load sample lectures
-                </button>
-              </div>
-            </div>
-          </div>
-        </main>
-      ) : (
+      {/* 2. CENTRAL AI CHAT WORKSPACE */}
         <main id="chat-workspace" className="app-main flex-1 flex flex-col overflow-hidden relative min-w-0">
           {/* Workspace Header */}
           <header className="min-h-14 sm:h-16 border-b border-[#c5d5da] flex items-center justify-between gap-2 px-3 sm:px-6 lg:px-8 py-2 bg-white/70 backdrop-blur-sm z-10 flex-shrink-0">
@@ -1083,11 +1079,13 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 Dialogue
               </span>
               <h1 className="font-display text-sm sm:text-base font-extrabold text-ink truncate tracking-tight">
-                {currentLecture.title}
+                {currentLecture ? currentLecture.title : "Ask anything"}
               </h1>
             </div>
 
             <div className="flex items-center gap-1.5 sm:space-x-2 shrink-0">
+              {currentLecture ? (
+                <>
               {/* Delete Active Lecture Button */}
               <button
                 onClick={() => handleDeleteLecture(currentLecture.id, selectedSubjectId)}
@@ -1122,11 +1120,22 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 <BookOpenText className="w-3.5 h-3.5" />
                 <span className="hidden md:inline">{rightDrawerOpen ? "Hide Notes" : "Open Notes"}</span>
               </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSelectFileClick}
+                  className="text-[10px] uppercase tracking-wider font-bold p-2 sm:px-3.5 sm:py-2 rounded-lg border border-[#c5d5da] bg-white text-ink hover:bg-[#076b5c] hover:text-white hover:border-[#076b5c] transition-all flex items-center space-x-2"
+                >
+                  <UploadCloud className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Upload lecture</span>
+                </button>
+              )}
             </div>
           </header>
 
           {/* Connected File Banner */}
-          {currentLecture.fileName && (
+          {currentLecture?.fileName && (
             <div className="bg-[#f4f8f9] border-b border-[#c5d5da] px-3 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-2 text-xs text-[#2a3d44] z-10 shrink-0 shadow-xs">
               <div className="flex items-center space-x-2.5 overflow-hidden min-w-0">
                 <div className="p-1.5 bg-white rounded border border-[#c5d5da] shrink-0 text-black shadow-2xs">
@@ -1177,9 +1186,13 @@ I have analyzed your lecture material and am fully grounded in its source conten
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="space-y-1">
-                    <h3 className="font-display text-lg font-extrabold tracking-tight text-ink">Ready when you are</h3>
+                    <h3 className="font-display text-lg font-extrabold tracking-tight text-ink">
+                      {currentLecture ? "Ready when you are" : "Ask me anything"}
+                    </h3>
                     <p className="text-xs text-[#2a3d44] leading-relaxed">
-                      This tutor is grounded in your active notes. Ask questions, get summaries, or check readiness with a quiz.
+                      {currentLecture
+                        ? "This tutor is grounded in your active notes. Ask questions, get summaries, or check readiness with a quiz."
+                        : "Chat freely here. Upload a lecture on the left anytime if you want answers grounded in your own notes."}
                     </p>
                   </div>
                   <div className="p-3 bg-ink text-white rounded-xl">
@@ -1187,6 +1200,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                   </div>
                 </div>
 
+                {currentLecture ? (
                 <div className={`grid gap-3 pt-2 ${currentLecture.fileName ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2"}`}>
                   <button
                     onClick={() => setIsQuizModalOpen(true)}
@@ -1234,6 +1248,26 @@ I have analyzed your lecture material and am fully grounded in its source conten
                     </button>
                   )}
                 </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <button
+                      onClick={() => handleQuickQuestion("Help me build a focused study plan for this week.")}
+                      className="bg-white hover:bg-[#076b5c] text-ink hover:text-white border border-[#c5d5da] hover:border-[#076b5c] p-3 rounded-lg text-left transition-all space-y-1 group"
+                    >
+                      <span className="text-[10px] uppercase tracking-wider font-bold text-[#0d8f7c]">Study plan</span>
+                      <h5 className="text-xs font-bold">Plan my week</h5>
+                      <p className="text-[10px] text-[#5a737a] leading-tight group-hover:text-white/80">Get a clear, realistic study schedule.</p>
+                    </button>
+                    <button
+                      onClick={() => handleQuickQuestion("Explain a hard concept to me as if I'm learning it for the first time.")}
+                      className="bg-white hover:bg-[#076b5c] text-ink hover:text-white border border-[#c5d5da] hover:border-[#076b5c] p-3 rounded-lg text-left transition-all space-y-1 group"
+                    >
+                      <span className="text-[10px] uppercase tracking-wider font-bold text-[#e8a54b]">Explain</span>
+                      <h5 className="text-xs font-bold">Simplify a concept</h5>
+                      <p className="text-[10px] text-[#5a737a] leading-tight group-hover:text-white/80">Break hard topics into plain language.</p>
+                    </button>
+                  </div>
+                )}
               </motion.div>
             )}
 
@@ -1324,6 +1358,8 @@ I have analyzed your lecture material and am fully grounded in its source conten
             <div id="quick-questions" className="space-y-2">
               <p className="text-[10px] uppercase tracking-[0.15em] text-[#5a737a] font-bold">Suggestions</p>
               <div className="flex flex-wrap gap-2">
+                {currentLecture ? (
+                  <>
                 <button
                   id="quick-q-clarify"
                   onClick={() => handleQuickQuestion("Can you clarify the core concepts in this lecture with dynamic examples?")}
@@ -1345,6 +1381,29 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 >
                   Ask related topic
                 </button>
+                  </>
+                ) : (
+                  <>
+                <button
+                  onClick={() => handleQuickQuestion("Help me build a focused study plan for this week.")}
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 sm:px-4 transition-all font-semibold"
+                >
+                  Build a study plan
+                </button>
+                <button
+                  onClick={() => handleQuickQuestion("What are good techniques for remembering lecture material?")}
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 sm:px-4 transition-all font-semibold"
+                >
+                  Memory techniques
+                </button>
+                <button
+                  onClick={() => handleQuickQuestion("Explain spaced repetition and how I should use it.")}
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 sm:px-4 transition-all font-semibold"
+                >
+                  Spaced repetition
+                </button>
+                  </>
+                )}
               </div>
             </div>
           )}
@@ -1357,7 +1416,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask about the lecture notes..."
+              placeholder={currentLecture ? "Ask about the lecture notes..." : "Ask the AI tutor anything..."}
               disabled={isSending}
               className="w-full bg-white border border-[#c5d5da] rounded-xl py-3 sm:py-3.5 pl-4 sm:pl-6 pr-24 sm:pr-28 text-sm focus:outline-none focus:border-[#0d8f7c] focus:ring-1 focus:ring-[#0d8f7c] placeholder-[#8aa0a6] transition-all"
             />
@@ -1376,7 +1435,6 @@ I have analyzed your lecture material and am fully grounded in its source conten
           </div>
         </footer>
       </main>
-      )}
 
       {/* 3. RIGHT DRAWER: Display Raw Lecture Notes */}
       <AnimatePresence>
