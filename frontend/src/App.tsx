@@ -294,11 +294,20 @@ I have analyzed your lecture material and am fully grounded in its source conten
     }));
 
     try {
-      // POST Request directly to Express backend API (Gemini)
+      // Prior turns (without the message we just appended) so follow-ups keep topic/language.
+      const historyForApi = currentHistory
+        .filter((m) => m.id !== "welcome" && m.text?.trim())
+        .slice(-10)
+        .map((m) => ({
+          sender: m.sender,
+          text: m.text,
+        }));
+
       const data = await apiFetch<{ reply: string }>("/api/chat", {
         method: "POST",
         body: JSON.stringify({
           message: textToSend,
+          history: historyForApi,
           lectureContext: currentLecture?.content || "",
           fileName: currentLecture?.fileName || (currentLecture ? `${currentLecture.title}.txt` : undefined),
           fileType: currentLecture?.fileType || "text",
