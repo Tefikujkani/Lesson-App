@@ -14,24 +14,37 @@
   --color-accent: #0d8f7c;
   --color-accent-deep: #076b5c;
   --color-warm: #e8a54b;
+  --color-muted: #5a737a;
 }
 
 :root {
-  --login-ink: #0c1a1f;
-  --login-ink-soft: #2a3d44;
-  --login-mist: #e7f0f2;
-  --login-paper: #f4f8f9;
-  --login-line: #c5d5da;
-  --login-accent: #0d8f7c;
-  --login-accent-deep: #076b5c;
-  --login-warm: #e8a54b;
-  --login-glow: rgba(13, 143, 124, 0.22);
+  --ink: #0c1a1f;
+  --ink-soft: #2a3d44;
+  --mist: #e7f0f2;
+  --paper: #f4f8f9;
+  --line: #c5d5da;
+  --accent: #0d8f7c;
+  --accent-deep: #076b5c;
+  --warm: #e8a54b;
+  --muted: #5a737a;
+  --glow: rgba(13, 143, 124, 0.22);
+
+  /* Login aliases */
+  --login-ink: var(--ink);
+  --login-ink-soft: var(--ink-soft);
+  --login-mist: var(--mist);
+  --login-paper: var(--paper);
+  --login-line: var(--line);
+  --login-accent: var(--accent);
+  --login-accent-deep: var(--accent-deep);
+  --login-warm: var(--warm);
+  --login-glow: var(--glow);
 }
 
 body {
   font-family: var(--font-sans);
-  background-color: var(--login-paper);
-  color: var(--login-ink);
+  background-color: var(--paper);
+  color: var(--ink);
   margin: 0;
   overflow: hidden;
   overscroll-behavior: none;
@@ -43,6 +56,67 @@ body {
 
 img, video, iframe {
   max-width: 100%;
+}
+
+/* ── App shell atmosphere ──────────────────────────────────────── */
+
+.app-shell {
+  position: relative;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 70% 50% at 0% 0%, var(--glow), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 100% 100%, rgba(232, 165, 75, 0.1), transparent 50%),
+    linear-gradient(155deg, #dce9ec 0%, var(--paper) 45%, #eef6f4 100%);
+}
+
+.app-shell::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.16;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 10%, transparent 80%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-shell > * {
+  position: relative;
+  z-index: 1;
+}
+
+.app-panel {
+  background: color-mix(in srgb, white 72%, transparent);
+  backdrop-filter: blur(10px);
+  border-color: var(--line);
+}
+
+.app-sidebar {
+  background: color-mix(in srgb, white 78%, var(--mist));
+  backdrop-filter: blur(12px);
+}
+
+.app-main {
+  background: color-mix(in srgb, white 88%, transparent);
+}
+
+.app-btn-primary {
+  background: var(--ink);
+  color: var(--paper);
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.app-btn-primary:hover:not(:disabled) {
+  background: var(--accent-deep);
+}
+
+.app-focus:focus {
+  outline: none;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 /* ── Login surface ─────────────────────────────────────────────── */

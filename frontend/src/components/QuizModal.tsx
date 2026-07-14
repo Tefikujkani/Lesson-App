@@ -116,19 +116,19 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-xs font-sans">
       <div 
         id="quiz-modal-container"
-        className="bg-white border border-[#E5E3E1] shadow-2xl rounded-xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-hidden"
+        className="bg-white border border-[#c5d5da] shadow-2xl rounded-xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-hidden"
       >
         {/* Header */}
-        <header className="p-6 border-b border-[#E5E3E1] flex justify-between items-center bg-[#FAF9F6] flex-shrink-0">
+        <header className="p-6 border-b border-[#c5d5da] flex justify-between items-center bg-[#f4f8f9] flex-shrink-0">
           <div className="flex items-center space-x-2">
             <Brain className="w-5 h-5 text-black" />
-            <h3 className="font-serif text-base font-bold text-black truncate max-w-xs md:max-w-md">
+            <h3 className="font-display font-extrabold tracking-tight text-base font-bold text-black truncate max-w-xs md:max-w-md">
               Knowledge Check: {lectureTitle}
             </h3>
           </div>
           <button 
             onClick={onClose}
-            className="p-1.5 text-[#8C8A88] hover:text-black hover:bg-[#F2F0EB] rounded-full transition-all"
+            className="p-1.5 text-[#5a737a] hover:text-black hover:bg-[#e7f0f2] rounded-full transition-all"
           >
             <X className="w-5 h-5" />
           </button>
@@ -138,16 +138,16 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
         {loading && (
           <div className="flex-1 p-12 flex flex-col items-center justify-center text-center space-y-6">
             <div className="relative">
-              <div className="w-16 h-16 rounded-full border-4 border-[#FAF9F6] border-t-black animate-spin" />
-              <GraduationCap className="w-6 h-6 absolute inset-0 m-auto text-black animate-pulse" />
+              <div className="w-16 h-16 rounded-full border-4 border-[#e7f0f2] border-t-[#0d8f7c] animate-spin" />
+              <GraduationCap className="w-6 h-6 absolute inset-0 m-auto text-[#0c1a1f] animate-pulse" />
             </div>
             <div className="space-y-2 max-w-xs">
-              <h4 className="font-serif text-lg font-bold text-black italic">Formulating Exam Questions...</h4>
-              <p className="text-xs text-[#8C8A88] leading-relaxed">
+              <h4 className="font-display font-extrabold tracking-tight text-lg font-bold text-black">Formulating Exam Questions...</h4>
+              <p className="text-xs text-[#5a737a] leading-relaxed">
                 Analyzing the source context of "{lectureTitle}" to draft 3 multiple-choice conceptual challenges...
               </p>
             </div>
-            <div className="text-[10px] uppercase tracking-widest text-[#B5B3B0] font-bold font-mono">
+            <div className="text-[10px] uppercase tracking-widest text-[#8aa0a6] font-bold font-mono">
               Powered by Groq
             </div>
           </div>
@@ -160,8 +160,8 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
               <XCircle className="w-7 h-7" />
             </div>
             <div className="space-y-2 max-w-md">
-              <h4 className="font-serif text-lg font-bold text-rose-800">Assessment Generation Interrupted</h4>
-              <p className="text-xs text-[#6B6967] leading-relaxed">
+              <h4 className="font-display font-extrabold tracking-tight text-lg font-bold text-rose-800">Assessment Generation Interrupted</h4>
+              <p className="text-xs text-[#2a3d44] leading-relaxed">
                 We encountered an error generating your customized test questions. 
               </p>
               <p className="text-xs font-mono text-rose-900 bg-rose-50 p-3 rounded-lg border border-rose-100 max-h-32 overflow-y-auto">
@@ -171,14 +171,14 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
             <div className="flex space-x-3">
               <button
                 onClick={fetchQuiz}
-                className="bg-black hover:bg-[#33312F] text-white px-5 py-2.5 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md flex items-center space-x-2"
+                className="bg-[#0c1a1f] hover:bg-[#076b5c] text-white px-5 py-2.5 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md flex items-center space-x-2"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
                 <span>Retry Generation</span>
               </button>
               <button
                 onClick={onClose}
-                className="border border-[#E5E3E1] hover:bg-[#F2F0EB] text-black px-4 py-2.5 rounded-lg text-xs uppercase tracking-wider font-bold transition-all"
+                className="border border-[#c5d5da] hover:bg-[#e7f0f2] text-black px-4 py-2.5 rounded-lg text-xs uppercase tracking-wider font-bold transition-all"
               >
                 Close
               </button>
@@ -190,19 +190,19 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
         {!loading && !error && !isFinished && activeQuestion && (
           <div className="flex-1 overflow-y-auto p-6 md:p-8 flex flex-col">
             {/* Progress indicator */}
-            <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#8C8A88] mb-4">
+            <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-[#5a737a] mb-4">
               <span>Question {currentQuestionIndex + 1} of {totalQuestions}</span>
               <span className="text-black font-mono">{(score / totalQuestions * 100).toFixed(0)}% accuracy potential</span>
             </div>
-            <div className="w-full h-1.5 bg-[#FAF9F6] rounded-full overflow-hidden mb-6 border border-[#E5E3E1]/40">
+            <div className="w-full h-1.5 bg-[#f4f8f9] rounded-full overflow-hidden mb-6 border border-[#c5d5da]/40">
               <div 
-                className="h-full bg-black transition-all duration-300" 
+                className="h-full bg-[#0c1a1f] transition-all duration-300" 
                 style={{ width: `${((currentQuestionIndex) / totalQuestions) * 100}%` }}
               />
             </div>
 
             {/* Question Card */}
-            <h4 className="font-serif text-lg md:text-xl font-bold text-black leading-relaxed mb-6">
+            <h4 className="font-display font-extrabold tracking-tight text-lg md:text-xl font-bold text-black leading-relaxed mb-6">
               {activeQuestion.question}
             </h4>
 
@@ -212,8 +212,8 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
                 const isSelected = selectedOptionIndex === idx;
                 const isCorrectOption = idx === activeQuestion.correctIndex;
                 
-                let optionStyle = "border-[#E5E3E1] hover:border-black bg-white";
-                if (isSelected) optionStyle = "border-black bg-[#FAF9F6] font-semibold";
+                let optionStyle = "border-[#c5d5da] hover:border-[#0d8f7c] bg-white";
+                if (isSelected) optionStyle = "border-[#0d8f7c] bg-[#e7f0f2] font-semibold";
                 
                 if (isSubmitted) {
                   if (isCorrectOption) {
@@ -221,7 +221,7 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
                   } else if (isSelected) {
                     optionStyle = "border-rose-500 bg-rose-50/50 text-rose-950";
                   } else {
-                    optionStyle = "border-[#E5E3E1]/70 bg-white opacity-60";
+                    optionStyle = "border-[#c5d5da]/70 bg-white opacity-60";
                   }
                 }
 
@@ -234,7 +234,7 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
                     className={`w-full text-left p-4 rounded-xl border text-xs md:text-sm transition-all flex items-start space-x-3 ${optionStyle}`}
                   >
                     <span className={`w-5 h-5 rounded-full border flex items-center justify-center shrink-0 text-[10px] font-bold ${
-                      isSelected ? "bg-black text-white border-black" : "border-[#E5E3E1] text-[#8C8A88]"
+                      isSelected ? "bg-[#0d8f7c] text-white border-[#0d8f7c]" : "border-[#c5d5da] text-[#5a737a]"
                     }`}>
                       {String.fromCharCode(65 + idx)}
                     </span>
@@ -246,7 +246,7 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
 
             {/* Explanation card (post submission) */}
             {isSubmitted && (
-              <div className="bg-[#FAF9F6] border border-[#E5E3E1] rounded-xl p-4 mb-6 text-xs leading-relaxed">
+              <div className="bg-[#f4f8f9] border border-[#c5d5da] rounded-xl p-4 mb-6 text-xs leading-relaxed">
                 <div className="flex items-center space-x-2 mb-1.5">
                   {selectedOptionIndex === activeQuestion.correctIndex ? (
                     <>
@@ -260,12 +260,12 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
                     </>
                   )}
                 </div>
-                <p className="text-[#4A4846]">{activeQuestion.explanation}</p>
+                <p className="text-[#2a3d44]">{activeQuestion.explanation}</p>
               </div>
             )}
 
             {/* Navigation / Submission controls */}
-            <div className="mt-auto pt-4 border-t border-[#E5E3E1] flex justify-end">
+            <div className="mt-auto pt-4 border-t border-[#c5d5da] flex justify-end">
               {!isSubmitted ? (
                 <button
                   type="button"
@@ -273,8 +273,8 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
                   onClick={handleAnswerSubmit}
                   className={`px-6 py-3 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md ${
                     selectedOptionIndex === null
-                      ? "bg-[#F2F0EB] text-[#B5B3B0] cursor-not-allowed"
-                      : "bg-black text-white hover:bg-[#33312F]"
+                      ? "bg-[#e7f0f2] text-[#8aa0a6] cursor-not-allowed"
+                      : "bg-[#0c1a1f] text-white hover:bg-[#0c1a1f]"
                   }`}
                 >
                   Verify Selection
@@ -283,7 +283,7 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
                 <button
                   type="button"
                   onClick={handleNextQuestion}
-                  className="bg-black hover:bg-[#33312F] text-white px-6 py-3 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md flex items-center space-x-2"
+                  className="bg-[#0c1a1f] hover:bg-[#076b5c] text-white px-6 py-3 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md flex items-center space-x-2"
                 >
                   <span>{currentQuestionIndex + 1 === totalQuestions ? "Review Scorecard" : "Next Question"}</span>
                   <ChevronRight className="w-4 h-4" />
@@ -301,11 +301,11 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
             </div>
 
             <div className="space-y-1 mb-6">
-              <span className="text-[10px] uppercase tracking-[0.25em] text-[#8C8A88] font-bold">Consolidated Score</span>
-              <h2 className="font-serif text-3xl font-bold text-black">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-[#5a737a] font-bold">Consolidated Score</span>
+              <h2 className="font-display font-extrabold tracking-tight text-3xl font-bold text-black">
                 {score} / {totalQuestions} Correct
               </h2>
-              <p className="text-xs text-[#8C8A88] font-mono">
+              <p className="text-xs text-[#5a737a] font-mono">
                 Accuracy: {((score / totalQuestions) * 100).toFixed(0)}%
               </p>
             </div>
@@ -324,14 +324,14 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
             <div className="flex space-x-3 w-full max-w-md">
               <button
                 onClick={fetchQuiz}
-                className="flex-1 bg-black hover:bg-[#33312F] text-white py-3 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md flex items-center justify-center space-x-2"
+                className="flex-1 bg-[#0c1a1f] hover:bg-[#076b5c] text-white py-3 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md flex items-center justify-center space-x-2"
               >
                 <RefreshCw className="w-4 h-4" />
                 <span>Retake Assessment</span>
               </button>
               <button
                 onClick={onClose}
-                className="flex-1 border border-[#E5E3E1] hover:bg-[#F2F0EB] text-black py-3 rounded-lg text-xs uppercase tracking-wider font-bold transition-all"
+                className="flex-1 border border-[#c5d5da] hover:bg-[#e7f0f2] text-black py-3 rounded-lg text-xs uppercase tracking-wider font-bold transition-all"
               >
                 Close Scorecard
               </button>

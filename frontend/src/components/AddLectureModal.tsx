@@ -193,17 +193,17 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
     <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs font-sans">
       <div 
         id="add-lecture-modal"
-        className="bg-white border border-[#E5E3E1] shadow-2xl rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden"
+        className="bg-white border border-[#c5d5da] shadow-2xl rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden"
       >
         {/* Header */}
-        <header className="p-6 border-b border-[#E5E3E1] flex justify-between items-center bg-[#FAF9F6] shrink-0">
+        <header className="p-6 border-b border-[#c5d5da] flex justify-between items-center bg-[#f4f8f9] shrink-0">
           <div className="flex items-center space-x-2.5">
             <div className="p-1.5 bg-neutral-100 rounded-lg">
               <BookOpen className="w-4 h-4 text-black" />
             </div>
             <div>
-              <h3 className="font-serif text-base font-bold text-black">Upload Lecture Document</h3>
-              <p className="text-[10px] text-[#8C8A88] uppercase tracking-wider font-semibold font-mono">
+              <h3 className="font-display font-extrabold tracking-tight text-base font-bold text-black">Upload Lecture Document</h3>
+              <p className="text-[10px] text-[#5a737a] uppercase tracking-wider font-semibold font-mono">
                 AI Detected Metadata
               </p>
             </div>
@@ -211,7 +211,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
           <button 
             onClick={onClose}
             disabled={isLoading}
-            className="p-1.5 text-[#8C8A88] hover:text-black hover:bg-[#F2F0EB] rounded-full transition-all disabled:opacity-50"
+            className="p-1.5 text-[#5a737a] hover:text-black hover:bg-[#e7f0f2] rounded-full transition-all disabled:opacity-50"
           >
             <X className="w-5 h-5" />
           </button>
@@ -224,8 +224,8 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
               <Sparkles className="w-5 h-5 text-amber-500 absolute -top-1 -right-1 animate-pulse" />
             </div>
             <div className="space-y-1.5">
-              <h4 className="font-serif text-base font-bold text-black italic">Analyzing Document...</h4>
-              <p className="text-xs text-[#8C8A88] max-w-xs leading-relaxed">
+              <h4 className="font-display font-extrabold tracking-tight text-base font-bold text-black">Analyzing Document...</h4>
+              <p className="text-xs text-[#5a737a] max-w-xs leading-relaxed">
                 Gemini is parsing the text content to extract a formal academic title, key themes, and descriptive context.
               </p>
             </div>
@@ -240,7 +240,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
 
             {/* Subject Category selector */}
             <div className="space-y-1.5">
-              <label className="text-[10px] uppercase tracking-wider font-bold text-[#6B6967]">
+              <label className="text-[10px] uppercase tracking-wider font-bold text-[#2a3d44]">
                 Subject Category
               </label>
               <input
@@ -250,21 +250,21 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
                 required
                 value={subjectName}
                 onChange={(e) => setSubjectName(e.target.value)}
-                className="w-full bg-[#FAF9F6] border border-[#E5E3E1] rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:border-black transition-all text-black font-semibold"
+                className="w-full bg-[#f4f8f9] border border-[#c5d5da] rounded-lg py-2.5 px-4 text-sm focus:outline-none focus:border-[#0d8f7c] transition-all text-black font-semibold"
               />
               <datalist id="existing-subjects">
                 {subjects.map((sub) => (
                   <option key={sub.id} value={sub.name} />
                 ))}
               </datalist>
-              <p className="text-[10px] text-[#8C8A88]">
+              <p className="text-[10px] text-[#5a737a]">
                 Type any category name you want, or select an existing one from the dropdown suggestions.
               </p>
             </div>
 
             {/* Premium Drag and Drop Zone */}
             <div className="space-y-1.5">
-              <label className="text-[10px] uppercase tracking-wider font-bold text-[#6B6967]">
+              <label className="text-[10px] uppercase tracking-wider font-bold text-[#2a3d44]">
                 Lecture Document File
               </label>
               
@@ -275,10 +275,10 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
                 onClick={() => fileInputRef.current?.click()}
                 className={`border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all flex flex-col items-center justify-center space-y-3 min-h-[160px] ${
                   isDragging
-                    ? "border-black bg-neutral-50/50"
+                    ? "border-[#0d8f7c] bg-neutral-50/50"
                     : file
                     ? "border-emerald-200 bg-emerald-50/10 hover:bg-emerald-50/20"
-                    : "border-[#E5E3E1] bg-[#FAF9F6] hover:border-black hover:bg-neutral-50/50"
+                    : "border-[#c5d5da] bg-[#f4f8f9] hover:border-[#0d8f7c] hover:bg-neutral-50/50"
                 }`}
               >
                 <input
@@ -300,7 +300,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
                         {(file.size / 1024).toFixed(1)} KB • Loaded successfully
                       </p>
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#8C8A88] hover:text-black underline">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#5a737a] hover:text-black underline">
                       Replace File
                     </span>
                   </>
@@ -311,7 +311,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
                     </div>
                     <div className="space-y-1">
                       <p className="text-xs font-bold text-black">Drag & drop your lecture or image file here</p>
-                      <p className="text-[10px] text-[#8C8A88] font-medium">or click to browse your local device</p>
+                      <p className="text-[10px] text-[#5a737a] font-medium">or click to browse your local device</p>
                     </div>
                     <div className="pt-1">
                       <span className="text-[9px] font-bold text-neutral-400 bg-white border border-neutral-200 py-0.5 px-2 rounded-full">
@@ -324,11 +324,11 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
             </div>
 
             {/* Action Buttons */}
-            <div className="pt-4 border-t border-[#E5E3E1] flex justify-end space-x-2">
+            <div className="pt-4 border-t border-[#c5d5da] flex justify-end space-x-2">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs uppercase tracking-wider font-bold text-[#6B6967] hover:text-black hover:bg-[#F2F0EB] rounded-lg transition-all"
+                className="px-4 py-2 text-xs uppercase tracking-wider font-bold text-[#2a3d44] hover:text-black hover:bg-[#e7f0f2] rounded-lg transition-all"
               >
                 Cancel
               </button>
@@ -337,7 +337,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
                 disabled={!file}
                 className={`px-5 py-2.5 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md flex items-center space-x-1.5 ${
                   file
-                    ? "bg-black hover:bg-[#33312F] text-white"
+                    ? "bg-[#0c1a1f] hover:bg-[#076b5c] text-white"
                     : "bg-neutral-100 text-neutral-400 cursor-not-allowed border border-neutral-200 shadow-none"
                 }`}
               >

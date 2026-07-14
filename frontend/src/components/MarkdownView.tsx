@@ -20,22 +20,22 @@ export function MarkdownView({ content, textSize = "base" }: MarkdownViewProps) 
       quote: "text-[12px] p-2.5 my-3",
     },
     base: {
-      p: "font-serif text-[15px] leading-relaxed text-[#33312F] mb-4",
-      li: "text-sm text-[#4A4846] leading-relaxed mb-1.5",
-      h1: "font-serif text-2xl font-black text-black mt-10 mb-5 tracking-tight border-b-2 border-black pb-2",
-      h2: "font-serif text-xl font-bold text-black mt-8 mb-4 tracking-tight border-b border-[#E5E3E1] pb-2",
-      h3: "font-serif text-lg font-bold text-black mt-6 mb-3 tracking-tight border-b border-[#E5E3E1] pb-1",
-      h4: "text-xs font-bold uppercase tracking-[0.15em] text-[#8C8A88] mt-5 mb-2",
-      quote: "border-l-4 border-black pl-4 py-2 italic my-4 text-[#6B6967] bg-[#FDFCFB] border border-[#E5E3E1] rounded-r p-3 text-[13px]",
+      p: "font-serif text-[15px] leading-relaxed text-[#0c1a1f] mb-4",
+      li: "text-sm text-[#2a3d44] leading-relaxed mb-1.5",
+      h1: "font-display text-2xl font-extrabold text-[#0c1a1f] mt-10 mb-5 tracking-tight border-b-2 border-[#0d8f7c] pb-2",
+      h2: "font-display text-xl font-bold text-[#0c1a1f] mt-8 mb-4 tracking-tight border-b border-[#c5d5da] pb-2",
+      h3: "font-display text-lg font-bold text-[#0c1a1f] mt-6 mb-3 tracking-tight border-b border-[#c5d5da] pb-1",
+      h4: "text-xs font-bold uppercase tracking-[0.15em] text-[#5a737a] mt-5 mb-2",
+      quote: "border-l-4 border-[#0d8f7c] pl-4 py-2 my-4 text-[#2a3d44] bg-[#f4f8f9] border border-[#c5d5da] rounded-r p-3 text-[13px]",
     },
     lg: {
-      p: "font-serif text-[17px] leading-loose text-[#222120] mb-5",
-      li: "text-base text-[#33312F] leading-loose mb-2",
-      h1: "font-serif text-3xl font-black text-black mt-12 mb-6 tracking-tight border-b-2 border-black pb-3",
-      h2: "font-serif text-2xl font-bold text-black mt-10 mb-5 tracking-tight border-b border-[#E5E3E1] pb-2.5",
-      h3: "font-serif text-xl font-bold text-black mt-8 mb-4 tracking-tight border-b border-[#E5E3E1] pb-1.5",
-      h4: "text-sm font-bold uppercase tracking-[0.15em] text-[#8C8A88] mt-6 mb-2.5",
-      quote: "border-l-4 border-black pl-5 py-3 italic my-5 text-[#4A4846] bg-[#FDFCFB] border border-[#E5E3E1] rounded-r p-4 text-[15px]",
+      p: "font-serif text-[17px] leading-loose text-[#0c1a1f] mb-5",
+      li: "text-base text-[#0c1a1f] leading-loose mb-2",
+      h1: "font-display text-3xl font-extrabold text-[#0c1a1f] mt-12 mb-6 tracking-tight border-b-2 border-[#0d8f7c] pb-3",
+      h2: "font-display text-2xl font-bold text-[#0c1a1f] mt-10 mb-5 tracking-tight border-b border-[#c5d5da] pb-2.5",
+      h3: "font-display text-xl font-bold text-[#0c1a1f] mt-8 mb-4 tracking-tight border-b border-[#c5d5da] pb-1.5",
+      h4: "text-sm font-bold uppercase tracking-[0.15em] text-[#5a737a] mt-6 mb-2.5",
+      quote: "border-l-4 border-[#0d8f7c] pl-5 py-3 my-5 text-[#2a3d44] bg-[#f4f8f9] border border-[#c5d5da] rounded-r p-4 text-[15px]",
     },
   }[textSize];
 
@@ -50,7 +50,7 @@ export function MarkdownView({ content, textSize = "base" }: MarkdownViewProps) 
   const flushList = () => {
     if (currentList.length > 0) {
       elements.push(
-        <ul key={`ul-${listKey++}`} className={`list-disc pl-6 mb-4 space-y-2 text-[#4A4846] leading-relaxed`}>
+        <ul key={`ul-${listKey++}`} className={`list-disc pl-6 mb-4 space-y-2 text-[#2a3d44] leading-relaxed`}>
           {...currentList}
         </ul>
       );
@@ -82,7 +82,7 @@ export function MarkdownView({ content, textSize = "base" }: MarkdownViewProps) 
         const nextBoldIdx = remaining.indexOf("**", boldIdx + 2);
         if (nextBoldIdx !== -1) {
           parts.push(
-            <strong key={key++} className="font-semibold text-black bg-[#F2F0EB] px-1 rounded">
+            <strong key={key++} className="font-semibold text-black bg-[#e7f0f2] px-1 rounded">
               {remaining.slice(boldIdx + 2, nextBoldIdx)}
             </strong>
           );
@@ -99,7 +99,7 @@ export function MarkdownView({ content, textSize = "base" }: MarkdownViewProps) 
         const nextCodeIdx = remaining.indexOf("`", codeIdx + 1);
         if (nextCodeIdx !== -1) {
           parts.push(
-            <code key={key++} className="font-mono text-xs text-amber-850 bg-[#FAF9F6] px-1.5 py-0.5 rounded border border-[#E5E3E1]">
+            <code key={key++} className="font-mono text-xs text-amber-850 bg-[#f4f8f9] px-1.5 py-0.5 rounded border border-[#c5d5da]">
               {remaining.slice(codeIdx + 1, nextCodeIdx)}
             </code>
           );
@@ -123,7 +123,7 @@ export function MarkdownView({ content, textSize = "base" }: MarkdownViewProps) 
         // End code block
         inCodeBlock = false;
         elements.push(
-          <pre key={`code-${i}`} className="bg-[#1A1A1A] text-[#FAF9F6] font-mono text-xs p-4 rounded overflow-x-auto my-4 border border-[#E5E3E1]">
+          <pre key={`code-${i}`} className="bg-[#0c1a1f] text-[#f4f8f9] font-mono text-xs p-4 rounded overflow-x-auto my-4 border border-[#c5d5da]">
             <code>{codeBlockContent.join("\n")}</code>
           </pre>
         );
