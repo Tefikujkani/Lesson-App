@@ -347,7 +347,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
       );
 
       const errorTextContent = isApiKeyErr
-        ? `⚠️ **API Key Configuration Required**\n\nYour **GROQ_API_KEY** is not configured. Add it to \`frontend/.env\` and restart the server (\`npm run dev\`).`
+        ? `⚠️ **API Key Configuration Required**\n\nYour **GROQ_API_KEY** is not configured. Add it to \`project/.env\` and restart the server (\`npm run dev\`).`
         : `⚠️ **Connection Error**: ${error.message || "Unable to reach the study helper."}\n\n*Please check that your network connection is active and your API configuration is set up properly.*`;
 
       // Add a helpful failed message back in history

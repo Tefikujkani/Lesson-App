@@ -25,7 +25,7 @@ async function verifyGoogleIdToken(idToken: string) {
   const clientId = process.env.GOOGLE_CLIENT_ID;
   if (!clientId) {
     throw new Error(
-      "GOOGLE_CLIENT_ID is not configured. Add it to frontend/.env from Google Cloud Console."
+      "GOOGLE_CLIENT_ID is not configured. Add it to project/.env from Google Cloud Console."
     );
   }
 

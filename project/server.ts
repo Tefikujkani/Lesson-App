@@ -45,7 +45,7 @@ async function startServer() {
     await connectDatabase();
   } catch (err: any) {
     console.error("MongoDB connection failed:", err.message);
-    console.error("Set MONGODB_URI in frontend/.env and restart.");
+    console.error("Set MONGODB_URI in project/.env and restart.");
     process.exit(1);
   }
 

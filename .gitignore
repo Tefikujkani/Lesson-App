@@ -7,5 +7,5 @@ coverage/
 .env
 .env.*
 !.env.example
-frontend/.env
-frontend/.env.local
+project/.env
+project/.env.local

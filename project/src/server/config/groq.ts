@@ -32,7 +32,7 @@ function getApiKey(): string {
   const apiKey = process.env.GROQ_API_KEY;
   if (!apiKey) {
     throw new Error(
-      "GROQ_API_KEY is not defined. Add it to frontend/.env (get a free key at https://console.groq.com)."
+      "GROQ_API_KEY is not defined. Add it to project/.env (get a free key at https://console.groq.com)."
     );
   }
   return apiKey;

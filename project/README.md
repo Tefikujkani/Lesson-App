@@ -7,7 +7,7 @@ React + Express + MongoDB + Google Gemini.
 1. Install dependencies:
 
 ```bash
-cd frontend
+cd project
 npm install
 ```
 
@@ -17,7 +17,7 @@ npm install
 copy .env.example .env
 ```
 
-3. Fill in `frontend/.env`:
+3. Fill in `project/.env`:
 
 | Variable | Purpose |
 |----------|---------|
