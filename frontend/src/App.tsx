@@ -1066,6 +1066,11 @@ I have analyzed your lecture material and am fully grounded in its source conten
 
       {/* 2. CENTRAL AI CHAT WORKSPACE */}
         <main id="chat-workspace" className="app-main flex-1 flex flex-col overflow-hidden relative min-w-0">
+          <div className="chat-orbits" aria-hidden>
+            <div className="chat-orbit chat-orbit--lg" />
+            <div className="chat-orbit chat-orbit--md" />
+            <div className="chat-orbit chat-orbit--sm" />
+          </div>
           {/* Workspace Header */}
           <header className="min-h-12 sm:min-h-14 border-b border-[#c5ddb8] flex items-center justify-between gap-2 px-2.5 sm:px-5 lg:px-6 py-1.5 bg-white/80 backdrop-blur-sm z-10 flex-shrink-0">
             <div className="flex items-center gap-2 sm:gap-3 overflow-hidden min-w-0 flex-1">

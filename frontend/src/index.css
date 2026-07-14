@@ -253,13 +253,13 @@ img, video, iframe {
 }
 
 .bloom-flower--tl {
-  top: calc(220px * -0.42);
-  left: calc(220px * -0.42);
+  top: calc(196px * -0.38);
+  left: calc(196px * -0.38);
 }
 
 .bloom-flower--br {
-  right: calc(220px * -0.42);
-  bottom: calc(220px * -0.42);
+  right: calc(196px * -0.38);
+  bottom: calc(196px * -0.38);
 }
 
 .bloom-flower--mirror {
@@ -270,7 +270,8 @@ img, video, iframe {
   width: 100%;
   height: 100%;
   display: block;
-  filter: drop-shadow(0 12px 28px rgba(90, 120, 100, 0.12));
+  filter: drop-shadow(0 10px 22px rgba(90, 120, 100, 0.1));
+  opacity: 0.92;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -303,18 +304,18 @@ img, video, iframe {
 
   .bloom-flower--tl,
   .bloom-flower--br {
-    width: 150px !important;
-    height: 150px !important;
+    width: 140px !important;
+    height: 140px !important;
   }
 
   .bloom-flower--tl {
-    top: calc(150px * -0.42);
-    left: calc(150px * -0.42);
+    top: calc(140px * -0.38);
+    left: calc(140px * -0.38);
   }
 
   .bloom-flower--br {
-    right: calc(150px * -0.42);
-    bottom: calc(150px * -0.42);
+    right: calc(140px * -0.38);
+    bottom: calc(140px * -0.38);
   }
 }
 
@@ -576,6 +577,53 @@ img, video, iframe {
   min-height: 0;
   flex: 1 1 auto;
   width: 100%;
+  isolation: isolate;
+}
+
+.chat-orbits {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.chat-orbit {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--lime) 28%, transparent);
+}
+
+.chat-orbit--lg {
+  width: min(70vw, 28rem);
+  height: min(70vw, 28rem);
+  top: 12%;
+  right: -18%;
+  border-color: color-mix(in srgb, var(--accent) 22%, transparent);
+  opacity: 0.55;
+}
+
+.chat-orbit--md {
+  width: min(48vw, 18rem);
+  height: min(48vw, 18rem);
+  bottom: 8%;
+  left: -14%;
+  border-color: color-mix(in srgb, var(--lime) 32%, transparent);
+  opacity: 0.5;
+}
+
+.chat-orbit--sm {
+  width: min(32vw, 12rem);
+  height: min(32vw, 12rem);
+  top: 42%;
+  left: 58%;
+  border-color: color-mix(in srgb, var(--accent-deep) 16%, transparent);
+  opacity: 0.4;
+}
+
+#chat-workspace > *:not(.chat-orbits) {
+  position: relative;
+  z-index: 1;
 }
 
 .chat-composer {
