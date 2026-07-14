@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { X, BookOpen, UploadCloud, FileText, CheckCircle2, Loader2, Sparkles } from "lucide-react";
 import { Subject } from "../types.ts";
 
@@ -193,8 +194,8 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
     }
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs font-sans">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-xs font-sans">
       <div 
         id="add-lecture-modal"
         className="bg-white border border-[#c5d5da] shadow-2xl rounded-2xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden"
@@ -352,6 +353,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

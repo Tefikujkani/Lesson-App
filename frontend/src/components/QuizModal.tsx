@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { X, Trophy, Brain, CheckCircle2, XCircle, ChevronRight, RefreshCw, GraduationCap } from "lucide-react";
 import { QuizQuestion } from "../types.ts";
 import { apiFetch } from "../lib/api.ts";
@@ -143,8 +144,8 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
   const answeredCorrectly =
     isSubmitted && arraysEqual([...selectedOptionIndexes].sort((a, b) => a - b), correctIndices);
 
-  return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-xs font-sans">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4 backdrop-blur-xs font-sans">
       <div
         id="quiz-modal-container"
         className="bg-white border border-[#c5d5da] shadow-2xl rounded-xl w-full max-w-xl max-h-[90vh] flex flex-col overflow-hidden"
@@ -374,6 +375,7 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
           </div>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

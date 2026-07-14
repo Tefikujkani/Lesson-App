@@ -875,7 +875,10 @@ I have analyzed your lecture material and am fully grounded in its source conten
         {/* Dynamic File Uploader & Reset actions */}
         <div className="p-3 border-b border-[#c5ddb8]/60 bg-white flex flex-col gap-2">
           <button
-            onClick={() => setIsAddLectureOpen(true)}
+            onClick={() => {
+              setMobileSidebarOpen(false);
+              setIsAddLectureOpen(true);
+            }}
             className="w-full flex items-center justify-center space-x-1.5 bg-ink hover:bg-[#4f8f28] text-white py-2.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all"
             title="Add a lecture manually"
           >
@@ -983,6 +986,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                         onClick={(e) => {
                           e.stopPropagation();
                           setModalSubjectId(subject.id);
+                          setMobileSidebarOpen(false);
                           setIsAddLectureOpen(true);
                         }}
                         className="p-1 text-[#5f7a62] hover:text-black hover:bg-[#c5ddb8] rounded transition-all"

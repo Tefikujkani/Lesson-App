@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Sparkles, FileText, Check, Loader2, ArrowRight, X, BookOpen, Hash } from "lucide-react";
 
 interface SuggestedLectureModalProps {
@@ -36,8 +37,8 @@ export function SuggestedLectureModal({
     onConfirm(title.trim(), subject.trim());
   };
 
-  return (
-    <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs font-sans">
+  return createPortal(
+    <div className="fixed inset-0 bg-black/60 z-[100] flex items-center justify-center p-4 backdrop-blur-xs font-sans">
       <div
         id="ai-suggestion-modal"
         className="bg-white border border-[#c5d5da] shadow-2xl rounded-2xl w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]"
@@ -151,6 +152,7 @@ export function SuggestedLectureModal({
           </form>
         )}
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
