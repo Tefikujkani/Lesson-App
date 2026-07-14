@@ -162,13 +162,24 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
 
   return (
     <div id="login-container" className="login-shell">
-      <motion.div
-        className="login-orbit login-orbit--side"
-        aria-hidden
-        initial={{ opacity: 0, scale: 0.88 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-      />
+      <div className="login-orbits" aria-hidden>
+        {[
+          "login-orbit--a",
+          "login-orbit--b",
+          "login-orbit--c",
+          "login-orbit--d",
+          "login-orbit--e",
+          "login-orbit--f",
+        ].map((orbitClass, i) => (
+          <motion.div
+            key={orbitClass}
+            className={`login-orbit ${orbitClass}`}
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.05, delay: 0.08 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+          />
+        ))}
+      </div>
 
       <BloomFlower className="bloom-flower--tl" delay={0.05} size={210} />
       <BloomFlower className="bloom-flower--br" delay={0.28} size={210} mirror />

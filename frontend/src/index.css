@@ -209,29 +209,109 @@ img, video, iframe {
   pointer-events: none;
 }
 
+.login-orbits {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
 .login-orbit {
   position: absolute;
   border-radius: 50%;
-  border: 1.5px solid color-mix(in srgb, var(--lime) 55%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--lime) 50%, transparent);
   pointer-events: none;
-  z-index: 0;
 }
 
-.login-orbit--side {
-  /* Small outline tucked to the side — no ring behind the form */
-  width: min(28vw, 9.5rem);
-  height: min(28vw, 9.5rem);
-  top: 18%;
-  right: 6%;
+.login-orbit--a {
+  width: 5.5rem;
+  height: 5.5rem;
+  top: 14%;
+  right: 7%;
   border-color: color-mix(in srgb, var(--accent) 42%, transparent);
 }
 
+.login-orbit--b {
+  width: 3.25rem;
+  height: 3.25rem;
+  top: 28%;
+  left: 8%;
+  border-color: color-mix(in srgb, var(--lime) 48%, transparent);
+  opacity: 0.85;
+}
+
+.login-orbit--c {
+  width: 4.25rem;
+  height: 4.25rem;
+  bottom: 16%;
+  right: 11%;
+  border-color: color-mix(in srgb, var(--accent-deep) 32%, transparent);
+  opacity: 0.8;
+}
+
+.login-orbit--d {
+  width: 2.5rem;
+  height: 2.5rem;
+  top: 62%;
+  left: 5%;
+  border-color: color-mix(in srgb, var(--accent) 36%, transparent);
+  opacity: 0.75;
+}
+
+.login-orbit--e {
+  width: 6.5rem;
+  height: 6.5rem;
+  bottom: 8%;
+  left: 18%;
+  border-color: color-mix(in srgb, var(--lime) 40%, transparent);
+  opacity: 0.7;
+}
+
+.login-orbit--f {
+  width: 2rem;
+  height: 2rem;
+  top: 18%;
+  left: 22%;
+  border-color: color-mix(in srgb, var(--accent-deep) 28%, transparent);
+  opacity: 0.7;
+}
+
 @media (max-width: 639px) {
-  .login-orbit--side {
-    width: 5.5rem;
-    height: 5.5rem;
-    top: 12%;
+  .login-orbit--a {
+    width: 4rem;
+    height: 4rem;
+    top: 10%;
     right: 4%;
+  }
+
+  .login-orbit--b {
+    width: 2.5rem;
+    height: 2.5rem;
+    left: 5%;
+  }
+
+  .login-orbit--c {
+    width: 3.25rem;
+    height: 3.25rem;
+    right: 5%;
+  }
+
+  .login-orbit--d {
+    width: 1.85rem;
+    height: 1.85rem;
+  }
+
+  .login-orbit--e {
+    width: 4.5rem;
+    height: 4.5rem;
+    left: 12%;
+  }
+
+  .login-orbit--f {
+    width: 1.5rem;
+    height: 1.5rem;
+    left: 18%;
   }
 }
 
