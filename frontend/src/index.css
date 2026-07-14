@@ -228,11 +228,11 @@ img, video, iframe {
 }
 
 .login-orbit--md {
-  /* Top-left corner ring — flower sits on its center */
+  /* Top-left corner ring — frames the bloom */
   width: min(52vw, 18rem);
   height: min(52vw, 18rem);
-  top: calc(min(52vw, 18rem) * -0.42);
-  left: calc(min(52vw, 18rem) * -0.42);
+  top: calc(min(52vw, 18rem) * -0.18);
+  left: calc(min(52vw, 18rem) * -0.18);
   border-color: color-mix(in srgb, var(--lime) 50%, transparent);
 }
 
@@ -240,8 +240,8 @@ img, video, iframe {
   /* Bottom-right corner ring — mirrors the top-left */
   width: min(52vw, 18rem);
   height: min(52vw, 18rem);
-  right: calc(min(52vw, 18rem) * -0.42);
-  bottom: calc(min(52vw, 18rem) * -0.42);
+  right: calc(min(52vw, 18rem) * -0.18);
+  bottom: calc(min(52vw, 18rem) * -0.18);
   border-color: color-mix(in srgb, var(--accent-deep) 30%, transparent);
 }
 
@@ -253,13 +253,13 @@ img, video, iframe {
 }
 
 .bloom-flower--tl {
-  top: calc(196px * -0.38);
-  left: calc(196px * -0.38);
+  top: 0.35rem;
+  left: 0.35rem;
 }
 
 .bloom-flower--br {
-  right: calc(196px * -0.38);
-  bottom: calc(196px * -0.38);
+  right: 0.35rem;
+  bottom: 0.35rem;
 }
 
 .bloom-flower--mirror {
@@ -271,7 +271,7 @@ img, video, iframe {
   height: 100%;
   display: block;
   filter: drop-shadow(0 10px 22px rgba(90, 120, 100, 0.1));
-  opacity: 0.92;
+  opacity: 0.95;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -293,29 +293,29 @@ img, video, iframe {
   }
 
   .login-orbit--md {
-    top: calc(11.5rem * -0.42);
-    left: calc(11.5rem * -0.42);
+    top: calc(11.5rem * -0.2);
+    left: calc(11.5rem * -0.2);
   }
 
   .login-orbit--sm {
-    right: calc(11.5rem * -0.42);
-    bottom: calc(11.5rem * -0.42);
+    right: calc(11.5rem * -0.2);
+    bottom: calc(11.5rem * -0.2);
   }
 
   .bloom-flower--tl,
   .bloom-flower--br {
-    width: 140px !important;
-    height: 140px !important;
+    width: 132px !important;
+    height: 132px !important;
   }
 
   .bloom-flower--tl {
-    top: calc(140px * -0.38);
-    left: calc(140px * -0.38);
+    top: 0.15rem;
+    left: 0.15rem;
   }
 
   .bloom-flower--br {
-    right: calc(140px * -0.38);
-    bottom: calc(140px * -0.38);
+    right: 0.15rem;
+    bottom: 0.15rem;
   }
 }
 
