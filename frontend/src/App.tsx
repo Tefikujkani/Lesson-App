@@ -733,7 +733,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
   return (
     <div 
       id="study-hub-root" 
-      className="app-shell flex h-[100dvh] text-[#0c1a1f] font-sans overflow-hidden relative"
+      className="app-shell flex h-[100dvh] max-h-[100dvh] text-[#0c1a1f] font-sans overflow-hidden relative"
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
@@ -786,16 +786,16 @@ I have analyzed your lecture material and am fully grounded in its source conten
       {/* 1. LEFT SIDEBAR: Collapsible Subjects & Lectures */}
       <aside
         id="sidebar-curriculum"
-        className={`app-sidebar fixed inset-y-0 left-0 z-40 w-[min(100vw,18rem)] border-r border-[#c5d5da] flex flex-col flex-shrink-0 transition-transform duration-200 ease-out lg:relative lg:translate-x-0 lg:z-10 ${
+        className={`app-sidebar fixed inset-y-0 left-0 z-40 flex flex-col flex-shrink-0 border-r border-[#c5d5da] transition-transform duration-200 ease-out lg:relative lg:translate-x-0 lg:z-10 ${
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         
         {/* Sidebar Header */}
-        <div className="p-5 sm:p-6 border-b border-[#c5d5da] flex items-start justify-between gap-2">
-          <div>
-            <h2 className="font-display text-2xl font-extrabold tracking-tight text-ink leading-none">Study Hub</h2>
-            <p className="mt-1.5 text-xs font-medium text-[#5a737a]">Your lectures & tutors</p>
+        <div className="px-4 py-4 sm:p-5 border-b border-[#c5d5da] flex items-start justify-between gap-2 shrink-0">
+          <div className="min-w-0">
+            <h2 className="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-ink leading-none">Study Hub</h2>
+            <p className="mt-1 text-[11px] sm:text-xs font-medium text-[#5a737a]">Your lectures & tutors</p>
           </div>
           <button
             type="button"
@@ -808,8 +808,8 @@ I have analyzed your lecture material and am fully grounded in its source conten
         </div>
 
         {/* User Card */}
-        <div className="px-4 py-3 border-b border-[#c5d5da]/70 bg-white flex items-center justify-between gap-2.5">
-          <div className="flex items-center space-x-2 overflow-hidden">
+        <div className="px-3 py-2.5 sm:px-4 sm:py-3 border-b border-[#c5d5da]/70 bg-white/80 flex items-center justify-between gap-2 shrink-0">
+          <div className="flex items-center space-x-2 overflow-hidden min-w-0">
             {currentUser.avatarUrl ? (
               <img
                 src={currentUser.avatarUrl}
@@ -822,25 +822,27 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 {currentUser.name.charAt(0).toUpperCase()}
               </div>
             )}
-            <div className="overflow-hidden">
+            <div className="overflow-hidden min-w-0">
               <h4 className="text-xs font-bold text-black truncate leading-tight">{currentUser.name}</h4>
               <p className="text-[10px] text-[#5a737a] truncate font-medium">{currentUser.email || currentUser.major}</p>
             </div>
           </div>
+          <div className="flex items-center shrink-0">
           <button 
             onClick={handleLogout}
             title="Log out of academic console"
-            className="p-1.5 text-[#5a737a] hover:text-rose-700 hover:bg-rose-50 rounded transition-all shrink-0"
+            className="p-2 text-[#5a737a] hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-all"
           >
             <LogOut className="w-4 h-4" />
           </button>
           <button
             onClick={handleDeleteAccount}
             title="Delete account"
-            className="p-1.5 text-[#5a737a] hover:text-rose-700 hover:bg-rose-50 rounded transition-all shrink-0"
+            className="p-2 text-[#5a737a] hover:text-rose-700 hover:bg-rose-50 rounded-lg transition-all"
           >
             <Trash2 className="w-4 h-4" />
           </button>
+          </div>
         </div>
 
         {/* Dynamic File Uploader & Reset actions */}
@@ -1065,52 +1067,49 @@ I have analyzed your lecture material and am fully grounded in its source conten
       {/* 2. CENTRAL AI CHAT WORKSPACE */}
         <main id="chat-workspace" className="app-main flex-1 flex flex-col overflow-hidden relative min-w-0">
           {/* Workspace Header */}
-          <header className="min-h-14 sm:h-16 border-b border-[#c5d5da] flex items-center justify-between gap-2 px-3 sm:px-6 lg:px-8 py-2 bg-white/70 backdrop-blur-sm z-10 flex-shrink-0">
-            <div className="flex items-center gap-2 sm:gap-4 overflow-hidden min-w-0">
+          <header className="min-h-12 sm:min-h-14 border-b border-[#c5d5da] flex items-center justify-between gap-2 px-2.5 sm:px-5 lg:px-6 py-1.5 bg-white/80 backdrop-blur-sm z-10 flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-3 overflow-hidden min-w-0 flex-1">
               <button
                 type="button"
                 onClick={() => setMobileSidebarOpen(true)}
-                className="lg:hidden p-2 rounded-lg border border-[#c5d5da] bg-white text-ink shrink-0"
+                className="lg:hidden p-2.5 rounded-lg border border-[#c5d5da] bg-white text-ink shrink-0"
                 aria-label="Open curriculum menu"
               >
                 <Menu className="w-4 h-4" />
               </button>
-              <span className="hidden sm:inline text-[10px] uppercase tracking-widest bg-ink text-white px-2.5 py-0.5 font-bold shrink-0 rounded">
+              <span className="hidden md:inline text-[10px] uppercase tracking-widest bg-ink text-white px-2.5 py-0.5 font-bold shrink-0 rounded">
                 Dialogue
               </span>
-              <h1 className="font-display text-sm sm:text-base font-extrabold text-ink truncate tracking-tight">
+              <h1 className="font-display text-[13px] sm:text-base font-extrabold text-ink truncate tracking-tight min-w-0">
                 {currentLecture ? currentLecture.title : "Ask anything"}
               </h1>
             </div>
 
-            <div className="flex items-center gap-1.5 sm:space-x-2 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               {currentLecture ? (
                 <>
-              {/* Delete Active Lecture Button */}
               <button
                 onClick={() => handleDeleteLecture(currentLecture.id, selectedSubjectId)}
-                className="text-[10px] uppercase tracking-wider font-bold p-2 sm:px-3 sm:py-2 rounded border border-rose-200 bg-rose-50/50 text-rose-800 hover:bg-rose-50 hover:text-rose-900 transition-all flex items-center space-x-1.5"
+                className="p-2 sm:px-3 sm:py-2 rounded-lg border border-rose-200 bg-rose-50/50 text-rose-800 hover:bg-rose-50 transition-all flex items-center"
                 title="Delete this lecture"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span className="hidden md:inline">Delete Notes</span>
+                <span className="hidden lg:inline ml-1.5 text-[10px] uppercase tracking-wider font-bold">Delete</span>
               </button>
 
-              {/* Take Quiz Button */}
               <button
                 onClick={() => setIsQuizModalOpen(true)}
-                className="text-[10px] uppercase tracking-wider font-bold p-2 sm:px-3.5 sm:py-2 rounded-lg border border-[#c5d5da] bg-white text-ink hover:bg-[#076b5c] hover:text-white hover:border-[#076b5c] transition-all flex items-center space-x-2"
+                className="p-2 sm:px-3 sm:py-2 rounded-lg border border-[#c5d5da] bg-white text-ink hover:bg-[#076b5c] hover:text-white hover:border-[#076b5c] transition-all flex items-center"
                 title="Take quiz"
               >
                 <Brain className="w-3.5 h-3.5 text-[#e8a54b]" />
-                <span className="hidden md:inline">Quiz</span>
+                <span className="hidden lg:inline ml-1.5 text-[10px] uppercase tracking-wider font-bold">Quiz</span>
               </button>
 
-              {/* Toggle Drawer Button */}
               <button
                 id="toggle-drawer-btn"
                 onClick={() => setRightDrawerOpen(!rightDrawerOpen)}
-                className={`text-[10px] uppercase tracking-wider font-bold p-2 sm:px-3.5 sm:py-2 rounded-lg border transition-all flex items-center space-x-2 ${
+                className={`p-2 sm:px-3 sm:py-2 rounded-lg border transition-all flex items-center ${
                   rightDrawerOpen 
                     ? "bg-[#e7f0f2] border-[#c5d5da] text-[#0c1a1f] hover:bg-[#c5d5da]"
                     : "bg-ink border-ink text-white hover:bg-[#076b5c] hover:border-[#076b5c]"
@@ -1118,17 +1117,17 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 title={rightDrawerOpen ? "Hide notes" : "Open notes"}
               >
                 <BookOpenText className="w-3.5 h-3.5" />
-                <span className="hidden md:inline">{rightDrawerOpen ? "Hide Notes" : "Open Notes"}</span>
+                <span className="hidden lg:inline ml-1.5 text-[10px] uppercase tracking-wider font-bold">{rightDrawerOpen ? "Hide" : "Notes"}</span>
               </button>
                 </>
               ) : (
                 <button
                   type="button"
                   onClick={handleSelectFileClick}
-                  className="text-[10px] uppercase tracking-wider font-bold p-2 sm:px-3.5 sm:py-2 rounded-lg border border-[#c5d5da] bg-white text-ink hover:bg-[#076b5c] hover:text-white hover:border-[#076b5c] transition-all flex items-center space-x-2"
+                  className="p-2 sm:px-3 sm:py-2 rounded-lg border border-[#c5d5da] bg-white text-ink hover:bg-[#076b5c] hover:text-white hover:border-[#076b5c] transition-all flex items-center"
                 >
                   <UploadCloud className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Upload lecture</span>
+                  <span className="hidden sm:inline ml-1.5 text-[10px] uppercase tracking-wider font-bold">Upload</span>
                 </button>
               )}
             </div>
@@ -1175,33 +1174,34 @@ I have analyzed your lecture material and am fully grounded in its source conten
           )}
 
           {/* Messages Scrolling Container */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 scrollbar-thin">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden px-3 py-4 sm:px-6 sm:py-6 lg:px-8 min-h-0 scrollbar-thin">
+            <div className="chat-thread space-y-4 sm:space-y-6">
             
             {/* Welcome Dashboard for Custom Uploads or default notes */}
             {activeMessages.length <= 1 && (
               <motion.div 
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="border border-[#c5d5da] bg-white/70 rounded-xl p-6 space-y-4 max-w-2xl mx-auto"
+                className="border border-[#c5d5da] bg-white/80 rounded-xl p-4 sm:p-6 space-y-3 sm:space-y-4"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="space-y-1">
-                    <h3 className="font-display text-lg font-extrabold tracking-tight text-ink">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1 min-w-0">
+                    <h3 className="font-display text-base sm:text-lg font-extrabold tracking-tight text-ink">
                       {currentLecture ? "Ready when you are" : "Ask me anything"}
                     </h3>
-                    <p className="text-xs text-[#2a3d44] leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-[#2a3d44] leading-relaxed">
                       {currentLecture
                         ? "This tutor is grounded in your active notes. Ask questions, get summaries, or check readiness with a quiz."
                         : "Chat freely here. Upload a lecture on the left anytime if you want answers grounded in your own notes."}
                     </p>
                   </div>
-                  <div className="p-3 bg-ink text-white rounded-xl">
-                    <GraduationCap className="w-6 h-6" />
+                  <div className="p-2.5 sm:p-3 bg-ink text-white rounded-xl shrink-0">
+                    <GraduationCap className="w-5 h-5 sm:w-6 sm:h-6" />
                   </div>
                 </div>
 
                 {currentLecture ? (
-                <div className={`grid gap-3 pt-2 ${currentLecture.fileName ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-2"}`}>
+                <div className={`grid gap-2 sm:gap-3 pt-1 ${currentLecture.fileName ? "grid-cols-1 sm:grid-cols-3" : "grid-cols-1 sm:grid-cols-2"}`}>
                   <button
                     onClick={() => setIsQuizModalOpen(true)}
                     className="bg-white hover:bg-[#076b5c] text-ink hover:text-white border border-[#c5d5da] hover:border-[#076b5c] p-3 rounded-lg text-left transition-all space-y-1 group"
@@ -1232,7 +1232,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                         setRightDrawerOpen(true);
                         setDrawerTab("source");
                       }}
-                      className="bg-white hover:bg-[#076b5c] text-ink hover:text-white border border-[#c5d5da] hover:border-[#076b5c] p-3 rounded-lg text-left transition-all space-y-1 group col-span-2 sm:col-span-1"
+                      className="bg-white hover:bg-[#076b5c] text-ink hover:text-white border border-[#c5d5da] hover:border-[#076b5c] p-3 rounded-lg text-left transition-all space-y-1 group"
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] uppercase tracking-wider font-bold text-emerald-600">Original Source</span>
@@ -1249,7 +1249,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                   )}
                 </div>
                 ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 pt-1">
                     <button
                       onClick={() => handleQuickQuestion("Help me build a focused study plan for this week.")}
                       className="bg-white hover:bg-[#076b5c] text-ink hover:text-white border border-[#c5d5da] hover:border-[#076b5c] p-3 rounded-lg text-left transition-all space-y-1 group"
@@ -1283,9 +1283,9 @@ I have analyzed your lecture material and am fully grounded in its source conten
                     transition={{ duration: 0.2 }}
                     className={`flex ${isTutor ? "justify-start" : "justify-end"}`}
                   >
-                    <div className={`w-full max-w-2xl flex items-start gap-2 sm:gap-4 ${isTutor ? "flex-row" : "flex-row-reverse"}`}>
+                    <div className={`w-full flex items-start gap-2 sm:gap-3 ${isTutor ? "flex-row" : "flex-row-reverse"}`}>
                       {/* Avatar Badge */}
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center shadow-sm text-sm shrink-0 ${
+                      <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shadow-sm text-sm shrink-0 ${
                         isTutor 
                           ? "bg-[#e7f0f2] text-ink font-display font-bold" 
                           : "bg-ink text-white text-[10px] font-bold"
@@ -1294,7 +1294,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                       </div>
 
                       {/* Bubble Content */}
-                      <div className="space-y-1.5 min-w-0 flex-1">
+                      <div className="space-y-1 min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] uppercase tracking-widest text-[#5a737a] font-semibold">
                             {isTutor ? "Tutor" : "You"}
@@ -1302,10 +1302,10 @@ I have analyzed your lecture material and am fully grounded in its source conten
                           <span className="text-[9px] text-[#8aa0a6] font-medium">{msg.timestamp}</span>
                         </div>
                         
-                        <div className={`p-3 sm:p-5 rounded-xl border leading-relaxed overflow-x-auto ${
+                        <div className={`p-3 sm:p-4 rounded-xl border leading-relaxed overflow-x-auto text-[13px] sm:text-sm ${
                           isTutor 
                             ? "bg-white/80 border-[#c5d5da] text-[#0c1a1f]" 
-                            : "bg-[#e7f0f2] border-[#c5d5da] text-ink text-[14px]"
+                            : "bg-[#e7f0f2] border-[#c5d5da] text-ink"
                         }`}>
                           {isTutor ? (
                             <MarkdownView content={msg.text} />
@@ -1348,36 +1348,37 @@ I have analyzed your lecture material and am fully grounded in its source conten
 
           {/* Invisible target to force scroll */}
           <div ref={messagesEndRef} />
+            </div>
         </div>
 
         {/* Workspace Footer & Text Input Pane */}
-        <footer className="p-3 sm:p-6 bg-[#f4f8f9]/80 border-t border-[#c5d5da] flex-shrink-0 space-y-3 sm:space-y-4 backdrop-blur-sm">
+        <footer className="chat-composer px-3 pt-3 sm:px-5 sm:pt-4 lg:px-6 bg-[#f4f8f9]/90 border-t border-[#c5d5da] flex-shrink-0 space-y-2.5 sm:space-y-3 backdrop-blur-sm">
           
           {/* Quick sample question suggestions based on active lecture */}
           {activeMessages.length <= 1 && !isSending && (
-            <div id="quick-questions" className="space-y-2">
+            <div id="quick-questions" className="space-y-1.5">
               <p className="text-[10px] uppercase tracking-[0.15em] text-[#5a737a] font-bold">Suggestions</p>
-              <div className="flex flex-wrap gap-2">
+              <div className="suggestion-rail">
                 {currentLecture ? (
                   <>
                 <button
                   id="quick-q-clarify"
                   onClick={() => handleQuickQuestion("Can you clarify the core concepts in this lecture with dynamic examples?")}
-                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 sm:px-4 transition-all font-semibold"
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 transition-all font-semibold"
                 >
                   Clarify core concept
                 </button>
                 <button
                   id="quick-q-summary"
                   onClick={() => handleQuickQuestion("Write a bulleted summary explaining the absolute key takeaways from these lecture notes.")}
-                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 sm:px-4 transition-all font-semibold"
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 transition-all font-semibold"
                 >
                   Summarize key takeaways
                 </button>
                 <button
                   id="quick-q-fallback"
                   onClick={() => handleQuickQuestion("Can you explain how this concept compares to modern quantum mechanics?")}
-                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 sm:px-4 transition-all font-semibold"
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 transition-all font-semibold"
                 >
                   Ask related topic
                 </button>
@@ -1386,19 +1387,19 @@ I have analyzed your lecture material and am fully grounded in its source conten
                   <>
                 <button
                   onClick={() => handleQuickQuestion("Help me build a focused study plan for this week.")}
-                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 sm:px-4 transition-all font-semibold"
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 transition-all font-semibold"
                 >
                   Build a study plan
                 </button>
                 <button
                   onClick={() => handleQuickQuestion("What are good techniques for remembering lecture material?")}
-                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 sm:px-4 transition-all font-semibold"
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 transition-all font-semibold"
                 >
                   Memory techniques
                 </button>
                 <button
                   onClick={() => handleQuickQuestion("Explain spaced repetition and how I should use it.")}
-                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 sm:px-4 transition-all font-semibold"
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-[#076b5c] text-[#2a3d44] hover:text-white border border-[#c5d5da] hover:border-[#076b5c] rounded-lg py-1.5 px-3 transition-all font-semibold"
                 >
                   Spaced repetition
                 </button>
@@ -1409,7 +1410,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
           )}
 
           {/* Interactive Chat Input Area */}
-          <div className="relative flex items-center">
+          <div className="relative flex items-center max-w-3xl mx-auto w-full">
             <input
               id="chat-input"
               type="text"
@@ -1418,13 +1419,13 @@ I have analyzed your lecture material and am fully grounded in its source conten
               onKeyDown={handleKeyDown}
               placeholder={currentLecture ? "Ask about the lecture notes..." : "Ask the AI tutor anything..."}
               disabled={isSending}
-              className="w-full bg-white border border-[#c5d5da] rounded-xl py-3 sm:py-3.5 pl-4 sm:pl-6 pr-24 sm:pr-28 text-sm focus:outline-none focus:border-[#0d8f7c] focus:ring-1 focus:ring-[#0d8f7c] placeholder-[#8aa0a6] transition-all"
+              className="w-full bg-white border border-[#c5d5da] rounded-xl py-3 pl-3.5 sm:pl-5 pr-[4.75rem] sm:pr-28 text-base sm:text-sm focus:outline-none focus:border-[#0d8f7c] focus:ring-1 focus:ring-[#0d8f7c] placeholder-[#8aa0a6] transition-all"
             />
             <button
               id="send-message-btn"
               onClick={() => sendMessage()}
               disabled={isSending || !inputText.trim()}
-              className={`absolute right-1.5 sm:right-2 px-4 sm:px-5 py-2 rounded-lg text-xs uppercase tracking-widest font-bold transition-all ${
+              className={`absolute right-1.5 sm:right-2 px-3.5 sm:px-5 py-2 rounded-lg text-[11px] sm:text-xs uppercase tracking-widest font-bold transition-all ${
                 isSending || !inputText.trim()
                   ? "bg-[#e7f0f2] text-[#8aa0a6] cursor-not-allowed"
                   : "bg-ink text-white hover:bg-[#076b5c]"
@@ -1445,15 +1446,15 @@ I have analyzed your lecture material and am fully grounded in its source conten
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 24 }}
             transition={{ type: "tween", duration: 0.2 }}
-            className={`fixed inset-0 z-40 border-l border-[#c5d5da] app-panel flex flex-col overflow-hidden lg:relative lg:inset-auto lg:z-10 lg:flex-shrink-0 ${
-              isNotesMaximized ? "lg:w-[560px]" : "lg:w-[380px]"
-            } w-full`}
+            className={`fixed inset-0 z-40 w-full border-l border-[#c5d5da] app-panel flex flex-col overflow-hidden lg:relative lg:inset-auto lg:z-10 lg:flex-shrink-0 ${
+              isNotesMaximized ? "lg:w-[min(560px,42vw)]" : "lg:w-[min(380px,34vw)]"
+            }`}
           >
             {/* Drawer Header */}
-            <div className="p-6 border-b border-[#c5d5da] flex justify-between items-center bg-white/50 flex-shrink-0">
-              <div className="flex items-center gap-2">
-                <BookOpenText className="w-4 h-4 text-ink" />
-                <h2 className="text-xs uppercase tracking-[0.2em] font-bold text-ink">Source Context</h2>
+            <div className="p-4 sm:p-5 border-b border-[#c5d5da] flex justify-between items-center bg-white/50 flex-shrink-0">
+              <div className="flex items-center gap-2 min-w-0">
+                <BookOpenText className="w-4 h-4 text-ink shrink-0" />
+                <h2 className="text-xs uppercase tracking-[0.2em] font-bold text-ink truncate">Source Context</h2>
               </div>
               <div className="flex items-center space-x-1">
                 {/* Maximize Toggle — desktop only */}
@@ -1484,10 +1485,10 @@ I have analyzed your lecture material and am fully grounded in its source conten
             </div>
 
             {/* Drawer Tabs */}
-            <div className="flex border-b border-[#c5d5da] bg-[#f4f8f9] px-4 shrink-0">
+            <div className="flex border-b border-[#c5d5da] bg-[#f4f8f9] px-2 sm:px-4 shrink-0 overflow-x-auto">
               <button
                 onClick={() => setDrawerTab("notes")}
-                className={`py-3 px-3 text-[10px] font-bold uppercase tracking-wider border-b-2 transition-all flex items-center gap-1.5 ${
+                className={`py-3 px-2.5 sm:px-3 text-[10px] font-bold uppercase tracking-wider border-b-2 transition-all flex items-center gap-1.5 shrink-0 ${
                   drawerTab === "notes"
                     ? "border-b-2 border-[#0d8f7c] text-ink"
                     : "border-b-2 border-transparent text-[#5a737a] hover:text-ink"
@@ -1498,14 +1499,15 @@ I have analyzed your lecture material and am fully grounded in its source conten
               </button>
               <button
                 onClick={() => setDrawerTab("source")}
-                className={`py-3 px-3 text-[10px] font-bold uppercase tracking-wider border-b-2 transition-all flex items-center gap-1.5 ${
+                className={`py-3 px-2.5 sm:px-3 text-[10px] font-bold uppercase tracking-wider border-b-2 transition-all flex items-center gap-1.5 shrink-0 ${
                   drawerTab === "source"
                     ? "border-b-2 border-[#0d8f7c] text-ink"
                     : "border-b-2 border-transparent text-[#5a737a] hover:text-ink"
                 }`}
               >
                 <FileText className="w-3.5 h-3.5" />
-                <span>Original File / Source</span>
+                <span className="sm:hidden">Source</span>
+                <span className="hidden sm:inline">Original File / Source</span>
               </button>
             </div>
 

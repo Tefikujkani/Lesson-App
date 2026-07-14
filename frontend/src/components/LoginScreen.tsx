@@ -112,12 +112,13 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   useEffect(() => {
     if (!googleReady || !googleBtnRef.current || !window.google?.accounts?.id) return;
     googleBtnRef.current.innerHTML = "";
+    const width = Math.min(350, Math.max(240, googleBtnRef.current.parentElement?.clientWidth || 280));
     window.google.accounts.id.renderButton(googleBtnRef.current, {
       theme: "outline",
       size: "large",
       text: "continue_with",
       shape: "rectangular",
-      width: 350,
+      width,
       logo_alignment: "left",
     });
   }, [googleReady]);

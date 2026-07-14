@@ -395,3 +395,80 @@ img, video, iframe {
     gap: 2.5rem;
   }
 }
+
+/* ── Responsive app chrome ─────────────────────────────────────── */
+
+.app-shell {
+  height: 100dvh;
+  max-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+#chat-workspace {
+  min-width: 0;
+  min-height: 0;
+}
+
+#sidebar-curriculum {
+  width: min(100vw - 2.5rem, 20rem);
+  max-width: 100vw;
+  padding-top: env(safe-area-inset-top, 0);
+  box-shadow: 8px 0 32px -16px rgba(12, 26, 31, 0.28);
+}
+
+@media (min-width: 1024px) {
+  #sidebar-curriculum {
+    width: 17.5rem;
+    box-shadow: none;
+  }
+}
+
+.chat-composer {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0));
+}
+
+.suggestion-rail {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.suggestion-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.suggestion-rail > button {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.chat-thread {
+  max-width: 48rem;
+  margin-inline: auto;
+  width: 100%;
+}
+
+@media (max-width: 639px) {
+  .app-shell::before {
+    opacity: 0.08;
+    background-size: 36px 36px;
+  }
+
+  .login-shell {
+    padding: 1rem;
+    align-items: flex-start;
+    padding-top: max(1.25rem, env(safe-area-inset-top, 0));
+  }
+
+  .login-brand__name {
+    font-size: clamp(2rem, 11vw, 2.6rem);
+  }
+
+  .login-google-slot > div,
+  .login-google-slot iframe {
+    max-width: 100% !important;
+  }
+}
