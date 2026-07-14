@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { GraduationCap, Sparkles, Mail, Lock, User as UserIcon } from "lucide-react";
+import { GraduationCap, Mail, Lock, User as UserIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { User } from "../types.ts";
 import { apiFetch, setAuthSession } from "../lib/api.ts";
@@ -53,7 +53,6 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleReady, setGoogleReady] = useState(false);
-  // undefined = still checking, null = not set up, string = ready to use
   const [googleClientId, setGoogleClientId] = useState<string | null | undefined>(undefined);
   const googleBtnRef = useRef<HTMLDivElement>(null);
 
@@ -158,162 +157,140 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
     }
   };
 
-  const handleGuestLogin = async () => {
-    setError("");
-    setLoading(true);
-    try {
-      const data = await apiFetch<{ token: string; user: User }>("/api/auth/guest", {
-        method: "POST",
-        body: JSON.stringify({}),
-      });
-      setAuthSession(data.token, data.user);
-      onLoginSuccess(data.user);
-    } catch (err: any) {
-      setError(err.message || "Guest login failed. Is the server connected to MongoDB?");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
-    <div id="login-container" className="min-h-screen w-full bg-[#FAF9F6] flex items-center justify-center p-6 relative overflow-hidden font-sans">
-      
-      <div className="absolute top-0 left-0 w-full h-1.5 bg-black" />
-      
-      <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-[#F2F0EB]/50 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-[#F2F0EB]/50 blur-3xl pointer-events-none" />
+    <div id="login-container" className="login-shell">
+      <motion.div
+        className="login-orbit login-orbit--lg"
+        aria-hidden
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
+      />
+      <motion.div
+        className="login-orbit login-orbit--sm"
+        aria-hidden
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.1, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
+      />
 
       <motion.div
-        initial={{ opacity: 0, y: 15 }}
+        className="login-stage"
+        initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="w-full max-w-md bg-white border border-[#E5E3E1] shadow-xl rounded-xl p-8 relative z-10"
+        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="text-center space-y-2 mb-8">
-          <div className="mx-auto w-12 h-12 rounded-full bg-black flex items-center justify-center text-white mb-3 shadow-md">
+        <header className="login-brand">
+          <motion.div
+            className="login-brand__mark"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, delay: 0.08 }}
+          >
             <GraduationCap className="w-6 h-6" />
-          </div>
-          <h1 className="font-serif text-3xl font-bold tracking-tight text-black italic">
+          </motion.div>
+          <motion.h1
+            className="login-brand__name"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.14 }}
+          >
             Study Hub
-          </h1>
-          <p className="text-xs uppercase tracking-[0.2em] text-[#8C8A88] font-bold">
-            Academic Assistant Portal
-          </p>
-        </div>
+          </motion.h1>
+          <motion.p
+            className="login-brand__tag"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.45, delay: 0.28 }}
+          >
+            Your lectures, chat, and quizzes — one place.
+          </motion.p>
+        </header>
 
-        {/* Google / Gmail sign-in — only shown when configured */}
-        {googleClientId ? (
-          <div className="mb-5 space-y-3">
-            {googleReady ? (
-              <div className="flex justify-center" ref={googleBtnRef} />
-            ) : (
-              <p className="text-[10px] text-center text-[#8C8A88]">Loading Google sign-in…</p>
-            )}
-            <div className="flex items-center gap-3">
-              <div className="h-px flex-1 bg-[#E5E3E1]" />
-              <span className="text-[10px] uppercase tracking-widest text-[#8C8A88] font-bold">or email</span>
-              <div className="h-px flex-1 bg-[#E5E3E1]" />
+        <div className="login-panel">
+          {googleClientId ? (
+            <div className="space-y-3">
+              {googleReady ? (
+                <div className="login-google-slot" ref={googleBtnRef} />
+              ) : (
+                <p className="login-google-loading">Loading Google sign-in…</p>
+              )}
+              <div className="login-divider">
+                <span>or email</span>
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
 
-        <form onSubmit={handleAuthSubmit} className="space-y-4">
-          
-          {isSignUp && (
-            <div className="space-y-1">
-              <label className="text-[10px] uppercase tracking-wider font-bold text-[#6B6967]">
-                Full Name
-              </label>
-              <div className="relative">
-                <UserIcon className="absolute left-3 top-3 w-4 h-4 text-[#8C8A88]" />
+          <form onSubmit={handleAuthSubmit} className="flex flex-col gap-4">
+            {isSignUp && (
+              <div className="login-field">
+                <label htmlFor="login-name">Full name</label>
+                <div className="login-input-wrap">
+                  <UserIcon />
+                  <input
+                    id="login-name"
+                    type="text"
+                    placeholder="Alex Mercer"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    disabled={loading}
+                    autoComplete="name"
+                  />
+                </div>
+              </div>
+            )}
+
+            <div className="login-field">
+              <label htmlFor="login-email">Email</label>
+              <div className="login-input-wrap">
+                <Mail />
                 <input
-                  type="text"
-                  placeholder="e.g., Alex Mercer"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  id="login-email"
+                  type="email"
+                  placeholder="student@university.edu"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   disabled={loading}
-                  className="w-full bg-[#FAF9F6] border border-[#E5E3E1] rounded-lg py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-black transition-all text-black"
+                  autoComplete="email"
                 />
               </div>
             </div>
-          )}
 
-          <div className="space-y-1">
-            <label className="text-[10px] uppercase tracking-wider font-bold text-[#6B6967]">
-              Academic Email Address
-            </label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3 w-4 h-4 text-[#8C8A88]" />
-              <input
-                type="email"
-                placeholder="student@university.edu"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
-                className="w-full bg-[#FAF9F6] border border-[#E5E3E1] rounded-lg py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-black transition-all text-black"
-              />
+            <div className="login-field">
+              <label htmlFor="login-password">Password</label>
+              <div className="login-input-wrap">
+                <Lock />
+                <input
+                  id="login-password"
+                  type="password"
+                  placeholder="••••••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={loading}
+                  autoComplete={isSignUp ? "new-password" : "current-password"}
+                />
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <label className="text-[10px] uppercase tracking-wider font-bold text-[#6B6967]">
-              Security Password
-            </label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 w-4 h-4 text-[#8C8A88]" />
-              <input
-                type="password"
-                placeholder="••••••••••••"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-                className="w-full bg-[#FAF9F6] border border-[#E5E3E1] rounded-lg py-2.5 pl-10 pr-4 text-sm focus:outline-none focus:border-black transition-all text-black"
-              />
-            </div>
-          </div>
+            {error && <p className="login-error">{error}</p>}
 
-          {error && (
-            <p className="text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-100 p-2.5 rounded text-center">
-              ⚠️ {error}
-            </p>
-          )}
+            <button type="submit" disabled={loading} className="login-submit">
+              {loading ? "Please wait…" : isSignUp ? "Create account" : "Sign in"}
+            </button>
+          </form>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-black hover:bg-[#33312F] disabled:opacity-60 text-white py-3 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md mt-6"
-          >
-            {loading ? "Please wait..." : isSignUp ? "Register Account" : "Access Console"}
-          </button>
-        </form>
-
-        <div className="text-center mt-6 pt-5 border-t border-[#E5E3E1]/70 space-y-4">
-          <button
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setError("");
-            }}
-            disabled={loading}
-            className="text-xs text-[#6B6967] hover:text-black hover:underline font-semibold"
-          >
-            {isSignUp ? "Already registered? Sign In" : "Need an academic profile? Create Account"}
-          </button>
-
-          <div>
-            <span className="text-[10px] text-[#8C8A88] font-bold uppercase tracking-widest block mb-2">— Or —</span>
+          <div className="login-switch">
             <button
-              onClick={handleGuestLogin}
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError("");
+              }}
               disabled={loading}
-              className="w-full bg-[#FAF9F6] hover:bg-[#F2F0EB] text-black border border-[#E5E3E1] py-2 rounded-lg text-xs uppercase tracking-wider font-bold transition-all flex items-center justify-center space-x-2 disabled:opacity-60"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
-              <span>Quick Demo Guest Login</span>
+              {isSignUp ? "Already have an account? Sign in" : "New here? Create an account"}
             </button>
           </div>
-        </div>
-
-        <div className="text-center mt-8 text-[9px] text-[#B5B3B0] font-mono tracking-wider">
-          EST. 2026 // SECURED CREDENTIAL CONSOLE
         </div>
       </motion.div>
     </div>

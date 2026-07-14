@@ -26,7 +26,8 @@ import {
   Loader2,
   Check,
   FileText,
-  Image
+  Image,
+  Menu
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { SUBJECTS_DATA } from "./data.ts";
@@ -81,7 +82,8 @@ export default function App() {
   const skipNextCurriculumSave = useRef(false);
 
   // UI Drawer & Modals States
-  const [rightDrawerOpen, setRightDrawerOpen] = useState(true);
+  const [rightDrawerOpen, setRightDrawerOpen] = useState(false);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const [readerTextSize, setReaderTextSize] = useState<"sm" | "base" | "lg">("base");
   const [searchInNotes, setSearchInNotes] = useState("");
@@ -112,6 +114,15 @@ export default function App() {
   // Helper to find currently selected subject & lecture
   const currentSubject = subjects.find(s => s.id === selectedSubjectId) || subjects[0] || null;
   const currentLecture = currentSubject?.lectures?.find(l => l.id === selectedLectureId) || currentSubject?.lectures?.[0] || null;
+
+  // Open notes drawer by default on desktop only
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setRightDrawerOpen(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   // Load curriculum + verify session from MongoDB when user is present
   useEffect(() => {
@@ -707,12 +718,22 @@ I have analyzed your lecture material and am fully grounded in its source conten
   return (
     <div 
       id="study-hub-root" 
-      className="flex h-screen bg-[#FAF9F6] text-[#1A1A1A] font-sans overflow-hidden relative"
+      className="flex h-[100dvh] bg-[#FAF9F6] text-[#1A1A1A] font-sans overflow-hidden relative"
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
+      {/* Mobile sidebar backdrop */}
+      {mobileSidebarOpen && (
+        <button
+          type="button"
+          aria-label="Close curriculum menu"
+          className="fixed inset-0 bg-black/40 z-30 lg:hidden"
+          onClick={() => setMobileSidebarOpen(false)}
+        />
+      )}
+
       {/* Viewport Drag Overlay */}
       <AnimatePresence>
         {isDragging && (
@@ -748,12 +769,27 @@ I have analyzed your lecture material and am fully grounded in its source conten
       />
 
       {/* 1. LEFT SIDEBAR: Collapsible Subjects & Lectures */}
-      <aside id="sidebar-curriculum" className="w-72 border-r border-[#E5E3E1] flex flex-col flex-shrink-0 bg-[#FAF9F6] z-10">
+      <aside
+        id="sidebar-curriculum"
+        className={`fixed inset-y-0 left-0 z-40 w-[min(100vw,18rem)] border-r border-[#E5E3E1] flex flex-col flex-shrink-0 bg-[#FAF9F6] transition-transform duration-200 ease-out lg:relative lg:translate-x-0 lg:z-10 ${
+          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
         
         {/* Sidebar Header */}
-        <div className="p-6 border-b border-[#E5E3E1]">
-          <h2 className="text-xs uppercase tracking-[0.2em] font-bold text-[#8C8A88]">Study Hub</h2>
-          <p className="mt-1 font-serif text-xl italic text-black font-semibold">Academic Console</p>
+        <div className="p-5 sm:p-6 border-b border-[#E5E3E1] flex items-start justify-between gap-2">
+          <div>
+            <h2 className="text-xs uppercase tracking-[0.2em] font-bold text-[#8C8A88]">Study Hub</h2>
+            <p className="mt-1 font-serif text-xl italic text-black font-semibold">Academic Console</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setMobileSidebarOpen(false)}
+            className="lg:hidden p-1.5 text-[#8C8A88] hover:text-black hover:bg-[#F2F0EB] rounded"
+            aria-label="Close menu"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </div>
 
         {/* User Card */}
@@ -925,6 +961,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                                 onClick={() => {
                                   setSelectedSubjectId(subject.id);
                                   setSelectedLectureId(lecture.id);
+                                  setMobileSidebarOpen(false);
                                 }}
                                 className={`flex-1 min-w-0 text-left px-3 py-2 text-xs font-medium flex flex-col gap-0.5 ${
                                   isSelected ? "text-black font-semibold border-l-2 border-black" : "text-[#6B6967]"
@@ -985,7 +1022,16 @@ I have analyzed your lecture material and am fully grounded in its source conten
 
       {/* 2. CENTRAL CHAT WORKSPACE / FILE DROP EMPTY STATE */}
       {!currentLecture ? (
-        <main id="chat-workspace" className="flex-1 flex flex-col bg-white overflow-hidden relative justify-center items-center p-8">
+        <main id="chat-workspace" className="flex-1 flex flex-col bg-white overflow-hidden relative justify-center items-center p-4 sm:p-8 min-w-0">
+          {/* Mobile menu when empty */}
+          <button
+            type="button"
+            onClick={() => setMobileSidebarOpen(true)}
+            className="absolute top-3 left-3 lg:hidden p-2 rounded-lg border border-[#E5E3E1] bg-white text-black shadow-xs z-10"
+            aria-label="Open curriculum menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
           <div className="max-w-md w-full text-center space-y-6">
             <div 
               onClick={handleSelectFileClick}
@@ -1021,58 +1067,68 @@ I have analyzed your lecture material and am fully grounded in its source conten
           </div>
         </main>
       ) : (
-        <main id="chat-workspace" className="flex-1 flex flex-col bg-white overflow-hidden relative">
+        <main id="chat-workspace" className="flex-1 flex flex-col bg-white overflow-hidden relative min-w-0">
           {/* Workspace Header */}
-          <header className="h-16 border-b border-[#E5E3E1] flex items-center justify-between px-8 bg-white z-10 flex-shrink-0">
-            <div className="flex items-center gap-4 overflow-hidden">
-              <span className="text-[10px] uppercase tracking-widest bg-black text-white px-2.5 py-0.5 font-bold">
+          <header className="min-h-14 sm:h-16 border-b border-[#E5E3E1] flex items-center justify-between gap-2 px-3 sm:px-6 lg:px-8 py-2 bg-white z-10 flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-4 overflow-hidden min-w-0">
+              <button
+                type="button"
+                onClick={() => setMobileSidebarOpen(true)}
+                className="lg:hidden p-2 rounded-lg border border-[#E5E3E1] bg-white text-black shrink-0"
+                aria-label="Open curriculum menu"
+              >
+                <Menu className="w-4 h-4" />
+              </button>
+              <span className="hidden sm:inline text-[10px] uppercase tracking-widest bg-black text-white px-2.5 py-0.5 font-bold shrink-0">
                 Academic Dialogue
               </span>
-              <h1 className="font-serif text-base font-bold text-black truncate tracking-tight">
+              <h1 className="font-serif text-sm sm:text-base font-bold text-black truncate tracking-tight">
                 {currentLecture.title}
               </h1>
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-1.5 sm:space-x-2 shrink-0">
               {/* Delete Active Lecture Button */}
               <button
                 onClick={() => handleDeleteLecture(currentLecture.id, selectedSubjectId)}
-                className="text-[10px] uppercase tracking-wider font-bold px-3 py-2 rounded border border-rose-200 bg-rose-50/50 text-rose-800 hover:bg-rose-50 hover:text-rose-900 transition-all flex items-center space-x-1.5"
+                className="text-[10px] uppercase tracking-wider font-bold p-2 sm:px-3 sm:py-2 rounded border border-rose-200 bg-rose-50/50 text-rose-800 hover:bg-rose-50 hover:text-rose-900 transition-all flex items-center space-x-1.5"
                 title="Delete this lecture"
               >
                 <Trash2 className="w-3.5 h-3.5" />
-                <span>Delete Notes</span>
+                <span className="hidden md:inline">Delete Notes</span>
               </button>
 
               {/* Take Quiz Button */}
               <button
                 onClick={() => setIsQuizModalOpen(true)}
-                className="text-[10px] uppercase tracking-wider font-bold px-3.5 py-2 rounded border border-[#E5E3E1] bg-white text-black hover:bg-black hover:text-white transition-all flex items-center space-x-2"
+                className="text-[10px] uppercase tracking-wider font-bold p-2 sm:px-3.5 sm:py-2 rounded border border-[#E5E3E1] bg-white text-black hover:bg-black hover:text-white transition-all flex items-center space-x-2"
+                title="Take quiz"
               >
                 <Brain className="w-3.5 h-3.5 text-amber-500" />
-                <span>Assessing learning</span>
+                <span className="hidden md:inline">Assessing learning</span>
               </button>
 
               {/* Toggle Drawer Button */}
               <button
                 id="toggle-drawer-btn"
                 onClick={() => setRightDrawerOpen(!rightDrawerOpen)}
-                className={`text-[10px] uppercase tracking-wider font-bold px-3.5 py-2 rounded border transition-all flex items-center space-x-2 ${
+                className={`text-[10px] uppercase tracking-wider font-bold p-2 sm:px-3.5 sm:py-2 rounded border transition-all flex items-center space-x-2 ${
                   rightDrawerOpen 
                     ? "bg-[#F2F0EB] border-[#E5E3E1] text-[#33312F] hover:bg-[#E5E3E1]"
                     : "bg-black border-black text-white hover:bg-[#33312F] shadow-sm"
                 }`}
+                title={rightDrawerOpen ? "Hide notes" : "Open notes"}
               >
                 <BookOpenText className="w-3.5 h-3.5" />
-                <span>{rightDrawerOpen ? "Hide Notes" : "Open Notes"}</span>
+                <span className="hidden md:inline">{rightDrawerOpen ? "Hide Notes" : "Open Notes"}</span>
               </button>
             </div>
           </header>
 
           {/* Connected File Banner */}
           {currentLecture.fileName && (
-            <div className="bg-[#FAF9F6] border-b border-[#E5E3E1] px-8 py-2.5 flex items-center justify-between text-xs text-[#6B6967] z-10 shrink-0 shadow-xs">
-              <div className="flex items-center space-x-2.5 overflow-hidden">
+            <div className="bg-[#FAF9F6] border-b border-[#E5E3E1] px-3 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-2 text-xs text-[#6B6967] z-10 shrink-0 shadow-xs">
+              <div className="flex items-center space-x-2.5 overflow-hidden min-w-0">
                 <div className="p-1.5 bg-white rounded border border-[#E5E3E1] shrink-0 text-black shadow-2xs">
                   {currentLecture.fileType === "image" ? (
                     <Image className="w-3.5 h-3.5" />
@@ -1082,16 +1138,16 @@ I have analyzed your lecture material and am fully grounded in its source conten
                     <FileText className="w-3.5 h-3.5" />
                   )}
                 </div>
-                <div className="flex flex-col overflow-hidden">
-                  <div className="flex items-center space-x-1.5">
-                    <span className="font-mono text-xs font-bold text-black truncate max-w-sm" title={currentLecture.fileName}>
+                <div className="flex flex-col overflow-hidden min-w-0">
+                  <div className="flex items-center space-x-1.5 min-w-0">
+                    <span className="font-mono text-xs font-bold text-black truncate" title={currentLecture.fileName}>
                       {currentLecture.fileName}
                     </span>
-                    <span className="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-[#E5E3E1]/70 text-black">
+                    <span className="hidden sm:inline text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-full bg-[#E5E3E1]/70 text-black shrink-0">
                       Active Source
                     </span>
                   </div>
-                  <span className="text-[10px] text-[#8C8A88] truncate">
+                  <span className="text-[10px] text-[#8C8A88] truncate hidden sm:block">
                     {currentLecture.fileType === "image" ? "Referencing uploaded diagram/handout" : currentLecture.fileType === "pdf" ? "Referencing uploaded PDF document source" : "Referencing uploaded text/document source"}
                   </span>
                 </div>
@@ -1101,15 +1157,16 @@ I have analyzed your lecture material and am fully grounded in its source conten
                   setRightDrawerOpen(true);
                   setDrawerTab("source");
                 }}
-                className="text-[10px] font-bold uppercase tracking-wider text-black bg-white border border-[#E5E3E1] hover:bg-neutral-50 px-3 py-1.5 rounded-lg transition-all shadow-xs shrink-0 flex items-center space-x-1.5"
+                className="text-[10px] font-bold uppercase tracking-wider text-black bg-white border border-[#E5E3E1] hover:bg-neutral-50 px-2.5 sm:px-3 py-1.5 rounded-lg transition-all shadow-xs shrink-0 flex items-center space-x-1.5"
               >
-                <span>View Original File / Source</span>
+                <span className="hidden sm:inline">View Original File / Source</span>
+                <span className="sm:hidden">Source</span>
               </button>
             </div>
           )}
 
           {/* Messages Scrolling Container */}
-          <div className="flex-1 overflow-y-auto p-8 bg-white space-y-6 scrollbar-thin">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-white space-y-6 scrollbar-thin">
             
             {/* Welcome Dashboard for Custom Uploads or default notes */}
             {activeMessages.length <= 1 && (
@@ -1192,7 +1249,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                     transition={{ duration: 0.2 }}
                     className={`flex ${isTutor ? "justify-start" : "justify-end"}`}
                   >
-                    <div className={`max-w-2xl flex items-start gap-4 ${isTutor ? "flex-row" : "flex-row-reverse"}`}>
+                    <div className={`w-full max-w-2xl flex items-start gap-2 sm:gap-4 ${isTutor ? "flex-row" : "flex-row-reverse"}`}>
                       {/* Avatar Badge */}
                       <div className={`w-8 h-8 rounded flex items-center justify-center shadow-sm text-sm shrink-0 ${
                         isTutor 
@@ -1203,7 +1260,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                       </div>
 
                       {/* Bubble Content */}
-                      <div className="space-y-1.5">
+                      <div className="space-y-1.5 min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] uppercase tracking-widest text-[#8C8A88] font-semibold">
                             {isTutor ? "Academic Tutor" : "Student"}
@@ -1211,7 +1268,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                           <span className="text-[9px] text-[#B5B3B0] font-medium">{msg.timestamp}</span>
                         </div>
                         
-                        <div className={`p-5 rounded-lg border leading-relaxed ${
+                        <div className={`p-3 sm:p-5 rounded-lg border leading-relaxed overflow-x-auto ${
                           isTutor 
                             ? "bg-[#F9F8F6] border-[#F2F0EB] text-[#33312F]" 
                             : "bg-[#F2F0EB] border-[#E5E3E1] text-black text-[14px]"
@@ -1260,7 +1317,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
         </div>
 
         {/* Workspace Footer & Text Input Pane */}
-        <footer className="p-6 bg-[#FAF9F6] border-t border-[#E5E3E1] flex-shrink-0 space-y-4">
+        <footer className="p-3 sm:p-6 bg-[#FAF9F6] border-t border-[#E5E3E1] flex-shrink-0 space-y-3 sm:space-y-4">
           
           {/* Quick sample question suggestions based on active lecture */}
           {activeMessages.length <= 1 && !isSending && (
@@ -1270,21 +1327,21 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 <button
                   id="quick-q-clarify"
                   onClick={() => handleQuickQuestion("Can you clarify the core concepts in this lecture with dynamic examples?")}
-                  className="text-[11px] uppercase tracking-wider bg-white hover:bg-black text-[#6B6967] hover:text-white border border-[#E5E3E1] hover:border-black rounded-full py-1.5 px-4 transition-all font-semibold"
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-black text-[#6B6967] hover:text-white border border-[#E5E3E1] hover:border-black rounded-full py-1.5 px-3 sm:px-4 transition-all font-semibold"
                 >
                   💡 Clarify core concept
                 </button>
                 <button
                   id="quick-q-summary"
                   onClick={() => handleQuickQuestion("Write a bulleted summary explaining the absolute key takeaways from these lecture notes.")}
-                  className="text-[11px] uppercase tracking-wider bg-white hover:bg-black text-[#6B6967] hover:text-white border border-[#E5E3E1] hover:border-black rounded-full py-1.5 px-4 transition-all font-semibold"
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-black text-[#6B6967] hover:text-white border border-[#E5E3E1] hover:border-black rounded-full py-1.5 px-3 sm:px-4 transition-all font-semibold"
                 >
                   📝 Summarize key takeaways
                 </button>
                 <button
                   id="quick-q-fallback"
                   onClick={() => handleQuickQuestion("Can you explain how this concept compares to modern quantum mechanics?")}
-                  className="text-[11px] uppercase tracking-wider bg-white hover:bg-black text-[#6B6967] hover:text-white border border-[#E5E3E1] hover:border-black rounded-full py-1.5 px-4 transition-all font-semibold"
+                  className="text-[10px] sm:text-[11px] uppercase tracking-wider bg-white hover:bg-black text-[#6B6967] hover:text-white border border-[#E5E3E1] hover:border-black rounded-full py-1.5 px-3 sm:px-4 transition-all font-semibold"
                 >
                   🧠 Ask external topic
                 </button>
@@ -1302,13 +1359,13 @@ I have analyzed your lecture material and am fully grounded in its source conten
               onKeyDown={handleKeyDown}
               placeholder="Ask about the lecture notes..."
               disabled={isSending}
-              className="w-full bg-white border border-[#E5E3E1] rounded-full py-3.5 pl-6 pr-28 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black placeholder-[#B5B3B0] transition-all"
+              className="w-full bg-white border border-[#E5E3E1] rounded-full py-3 sm:py-3.5 pl-4 sm:pl-6 pr-24 sm:pr-28 text-sm focus:outline-none focus:border-black focus:ring-1 focus:ring-black placeholder-[#B5B3B0] transition-all"
             />
             <button
               id="send-message-btn"
               onClick={() => sendMessage()}
               disabled={isSending || !inputText.trim()}
-              className={`absolute right-2 px-5 py-2 rounded-full text-xs uppercase tracking-widest font-bold transition-all ${
+              className={`absolute right-1.5 sm:right-2 px-4 sm:px-5 py-2 rounded-full text-xs uppercase tracking-widest font-bold transition-all ${
                 isSending || !inputText.trim()
                   ? "bg-[#F2F0EB] text-[#B5B3B0] cursor-not-allowed"
                   : "bg-black text-white hover:bg-[#33312F] shadow-sm"
@@ -1326,11 +1383,13 @@ I have analyzed your lecture material and am fully grounded in its source conten
         {rightDrawerOpen && currentLecture && (
           <motion.section
             id="drawer-lecture-content"
-            initial={{ width: 0, opacity: 0 }}
-            animate={{ width: isNotesMaximized ? 560 : 380, opacity: 1 }}
-            exit={{ width: 0, opacity: 0 }}
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 24 }}
             transition={{ type: "tween", duration: 0.2 }}
-            className="border-l border-[#E5E3E1] bg-[#FDFCFB] flex flex-col flex-shrink-0 overflow-hidden"
+            className={`fixed inset-0 z-40 border-l border-[#E5E3E1] bg-[#FDFCFB] flex flex-col overflow-hidden lg:relative lg:inset-auto lg:z-10 lg:flex-shrink-0 ${
+              isNotesMaximized ? "lg:w-[560px]" : "lg:w-[380px]"
+            } w-full`}
           >
             {/* Drawer Header */}
             <div className="p-6 border-b border-[#E5E3E1] flex justify-between items-center bg-[#FDFCFB] flex-shrink-0">
@@ -1339,10 +1398,10 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 <h2 className="text-xs uppercase tracking-[0.2em] font-bold text-black">Source Context</h2>
               </div>
               <div className="flex items-center space-x-1">
-                {/* Maximize Toggle */}
+                {/* Maximize Toggle — desktop only */}
                 <button
                   onClick={() => setIsNotesMaximized(!isNotesMaximized)}
-                  className="p-1.5 text-[#8C8A88] hover:text-black hover:bg-[#F2F0EB] rounded transition-all"
+                  className="hidden lg:inline-flex p-1.5 text-[#8C8A88] hover:text-black hover:bg-[#F2F0EB] rounded transition-all"
                   title={isNotesMaximized ? "Minimize size" : "Maximize size"}
                 >
                   {isNotesMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
@@ -1428,7 +1487,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 </div>
 
                 {/* Scrollable Document Pane */}
-                <div className="flex-1 p-8 overflow-y-auto font-serif leading-relaxed text-[#4A4846] text-sm select-text scrollbar-thin">
+                <div className="flex-1 p-4 sm:p-8 overflow-y-auto font-serif leading-relaxed text-[#4A4846] text-sm select-text scrollbar-thin">
                   <h3 className="text-xl mb-2 text-black border-l-4 border-black pl-4 font-serif font-bold">
                     {currentLecture.title}
                   </h3>

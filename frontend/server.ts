@@ -72,8 +72,12 @@ async function startServer() {
     // Serve static files from the Vite production build folder
     app.use(express.static(distPath));
     
-    // All other GET requests fall back to React Router / index.html
-    app.get("*", (req: Request, res: Response) => {
+    // All other GET requests fall back to index.html (skip API paths)
+    app.get("*", (req: Request, res: Response, next: NextFunction) => {
+      if (req.path.startsWith("/api")) {
+        next();
+        return;
+      }
       res.sendFile(path.join(distPath, "index.html"));
     });
   }
