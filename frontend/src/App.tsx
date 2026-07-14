@@ -786,8 +786,8 @@ I have analyzed your lecture material and am fully grounded in its source conten
       {/* 1. LEFT SIDEBAR: Collapsible Subjects & Lectures */}
       <aside
         id="sidebar-curriculum"
-        className={`app-sidebar fixed inset-y-0 left-0 z-40 flex flex-col flex-shrink-0 border-r border-[#c5d5da] transition-transform duration-200 ease-out lg:relative lg:translate-x-0 lg:z-10 ${
-          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+        className={`app-sidebar flex flex-col flex-shrink-0 border-r border-[#c5d5da] transition-transform duration-200 ease-out lg:translate-x-0 ${
+          mobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
         
@@ -1072,10 +1072,11 @@ I have analyzed your lecture material and am fully grounded in its source conten
               <button
                 type="button"
                 onClick={() => setMobileSidebarOpen(true)}
-                className="lg:hidden p-2.5 rounded-lg border border-[#c5d5da] bg-white text-ink shrink-0"
-                aria-label="Open curriculum menu"
+                className="lg:hidden inline-flex items-center gap-1.5 p-2 sm:px-2.5 sm:py-2 rounded-lg border border-[#c5d5da] bg-white text-ink shrink-0"
+                aria-label="Open lectures and files"
               >
                 <Menu className="w-4 h-4" />
+                <span className="hidden xs:inline text-[10px] font-bold uppercase tracking-wider sm:inline">Files</span>
               </button>
               <span className="hidden md:inline text-[10px] uppercase tracking-widest bg-ink text-white px-2.5 py-0.5 font-bold shrink-0 rounded">
                 Dialogue
@@ -1192,7 +1193,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                     <p className="text-[11px] sm:text-xs text-[#2a3d44] leading-relaxed">
                       {currentLecture
                         ? "This tutor is grounded in your active notes. Ask questions, get summaries, or check readiness with a quiz."
-                        : "Chat freely here. Upload a lecture on the left anytime if you want answers grounded in your own notes."}
+                        : "Chat freely here. Use Files to upload a lecture anytime if you want answers grounded in your own notes."}
                     </p>
                   </div>
                   <div className="p-2.5 sm:p-3 bg-ink text-white rounded-xl shrink-0">
