@@ -144,7 +144,7 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
             <div className="space-y-2 max-w-xs">
               <h4 className="font-display font-extrabold tracking-tight text-lg font-bold text-black">Formulating Exam Questions...</h4>
               <p className="text-xs text-[#5a737a] leading-relaxed">
-                Analyzing the source context of "{lectureTitle}" to draft 3 multiple-choice conceptual challenges...
+                Analyzing the source context of "{lectureTitle}" to draft 10 multiple-choice conceptual challenges...
               </p>
             </div>
             <div className="text-[10px] uppercase tracking-widest text-[#8aa0a6] font-bold font-mono">

@@ -1237,7 +1237,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                       <ChevronRight className="w-3.5 h-3.5 opacity-55 group-hover:translate-x-0.5 transition-transform" />
                     </div>
                     <h5 className="text-xs font-bold">Assess My Learning</h5>
-                    <p className="text-[10px] text-[#5f7a62] leading-tight group-hover:text-white/80">Generate a 3-question MCQ to test knowledge.</p>
+                    <p className="text-[10px] text-[#5f7a62] leading-tight group-hover:text-white/80">Generate a 10-question MCQ to test knowledge.</p>
                   </button>
 
                   <button

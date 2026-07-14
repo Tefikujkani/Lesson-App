@@ -15,7 +15,7 @@ export async function generateLectureQuiz(req: Request, res: Response, next: Nex
 
     const title = typeof lectureTitle === "string" ? lectureTitle : "the lecture";
 
-    const systemInstruction = `You are an academic assessor. Create a challenging, accurate, and fair 3-question multiple-choice quiz based ONLY on the provided lecture notes.
+    const systemInstruction = `You are an academic assessor. Create a challenging, accurate, and fair 10-question multiple-choice quiz based ONLY on the provided lecture notes.
 
 Return ONLY valid JSON in this exact shape:
 {
@@ -30,17 +30,18 @@ Return ONLY valid JSON in this exact shape:
 }
 
 Rules:
-1. Exactly 3 questions.
+1. Exactly 10 questions covering different parts of the notes when possible.
 2. Each question has exactly 4 options.
 3. Only one option is correct.
 4. correctIndex is the 0-based index of the correct option (0, 1, 2, or 3).
 5. explanation briefly says why the answer is correct based on the notes.
-6. All questions must come from the lecture context.`;
+6. All questions must come from the lecture context.
+7. Mix difficulty: some recall, some application/understanding.`;
 
-    const prompt = `Generate a 3-question multiple-choice quiz for the lecture titled "${title}".
+    const prompt = `Generate a 10-question multiple-choice quiz for the lecture titled "${title}".
 
 === START LECTURE NOTES ===
-${lectureContext}
+${lectureContext.slice(0, 18000)}
 === END LECTURE NOTES ===`;
 
     const text = await groqChatCompletion({
@@ -59,7 +60,7 @@ ${lectureContext}
       throw new Error("Invalid quiz format returned by AI.");
     }
 
-    res.json({ quiz: quizData });
+    res.json({ quiz: quizData.slice(0, 10) });
   } catch (error: any) {
     next(error);
   }
