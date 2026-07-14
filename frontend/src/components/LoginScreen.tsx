@@ -170,13 +170,16 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
           "login-orbit--d",
           "login-orbit--e",
           "login-orbit--f",
+          "login-orbit--g",
+          "login-orbit--h",
+          "login-orbit--i",
         ].map((orbitClass, i) => (
           <motion.div
             key={orbitClass}
             className={`login-orbit ${orbitClass}`}
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.05, delay: 0.08 + i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 1.05, delay: 0.08 + i * 0.05, ease: [0.22, 1, 0.36, 1] }}
           />
         ))}
       </div>

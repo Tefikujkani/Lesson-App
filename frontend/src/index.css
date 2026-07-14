@@ -277,6 +277,34 @@ img, video, iframe {
   opacity: 0.7;
 }
 
+/* Medium orbits — bigger than accents, not form-sized */
+.login-orbit--g {
+  width: min(28vw, 11rem);
+  height: min(28vw, 11rem);
+  top: 6%;
+  left: -3%;
+  border-color: color-mix(in srgb, var(--lime) 44%, transparent);
+  opacity: 0.72;
+}
+
+.login-orbit--h {
+  width: min(26vw, 10rem);
+  height: min(26vw, 10rem);
+  bottom: 4%;
+  right: -2%;
+  border-color: color-mix(in srgb, var(--accent) 38%, transparent);
+  opacity: 0.7;
+}
+
+.login-orbit--i {
+  width: min(22vw, 8.5rem);
+  height: min(22vw, 8.5rem);
+  top: 48%;
+  right: 3%;
+  border-color: color-mix(in srgb, var(--accent-deep) 30%, transparent);
+  opacity: 0.65;
+}
+
 @media (max-width: 639px) {
   .login-orbit--a {
     width: 4rem;
@@ -312,6 +340,25 @@ img, video, iframe {
     width: 1.5rem;
     height: 1.5rem;
     left: 18%;
+  }
+
+  .login-orbit--g {
+    width: 7.5rem;
+    height: 7.5rem;
+    top: 4%;
+    left: -8%;
+  }
+
+  .login-orbit--h {
+    width: 7rem;
+    height: 7rem;
+    right: -6%;
+  }
+
+  .login-orbit--i {
+    width: 5.5rem;
+    height: 5.5rem;
+    right: 1%;
   }
 }
 
