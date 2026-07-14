@@ -168,20 +168,6 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       />
-      <motion.div
-        className="login-orbit login-orbit--md"
-        aria-hidden
-        initial={{ opacity: 0, scale: 0.88 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.15, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-      />
-      <motion.div
-        className="login-orbit login-orbit--sm"
-        aria-hidden
-        initial={{ opacity: 0, scale: 0.88 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.1, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-      />
 
       <BloomFlower className="bloom-flower--tl" delay={0.05} size={210} />
       <BloomFlower className="bloom-flower--br" delay={0.28} size={210} mirror />

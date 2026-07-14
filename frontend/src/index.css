@@ -218,30 +218,12 @@ img, video, iframe {
 }
 
 .login-orbit--side {
-  /* Small outline on the side — was the big front circle */
+  /* Small outline tucked to the side — no ring behind the form */
   width: min(28vw, 9.5rem);
   height: min(28vw, 9.5rem);
   top: 18%;
   right: 6%;
   border-color: color-mix(in srgb, var(--accent) 42%, transparent);
-}
-
-.login-orbit--md {
-  /* Top-left corner ring — frames the bloom */
-  width: min(52vw, 18rem);
-  height: min(52vw, 18rem);
-  top: calc(min(52vw, 18rem) * -0.18);
-  left: calc(min(52vw, 18rem) * -0.18);
-  border-color: color-mix(in srgb, var(--lime) 50%, transparent);
-}
-
-.login-orbit--sm {
-  /* Bottom-right corner ring — mirrors the top-left */
-  width: min(52vw, 18rem);
-  height: min(52vw, 18rem);
-  right: calc(min(52vw, 18rem) * -0.18);
-  bottom: calc(min(52vw, 18rem) * -0.18);
-  border-color: color-mix(in srgb, var(--accent-deep) 30%, transparent);
 }
 
 @media (max-width: 639px) {
@@ -290,26 +272,6 @@ img, video, iframe {
 }
 
 @media (max-width: 639px) {
-  .login-orbit--md,
-  .login-orbit--sm {
-    width: 11.5rem;
-    height: 11.5rem;
-    top: auto;
-    left: auto;
-    right: auto;
-    bottom: auto;
-  }
-
-  .login-orbit--md {
-    top: calc(11.5rem * -0.2);
-    left: calc(11.5rem * -0.2);
-  }
-
-  .login-orbit--sm {
-    right: calc(11.5rem * -0.2);
-    bottom: calc(11.5rem * -0.2);
-  }
-
   .bloom-flower--tl,
   .bloom-flower--br {
     width: 132px !important;
