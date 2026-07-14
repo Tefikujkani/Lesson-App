@@ -220,24 +220,28 @@ img, video, iframe {
 .login-orbit--lg {
   width: min(72vw, 34rem);
   height: min(72vw, 34rem);
-  top: -14%;
-  right: -10%;
+  top: 50%;
+  left: 50%;
+  margin-top: calc(min(72vw, 34rem) / -2);
+  margin-left: calc(min(72vw, 34rem) / -2);
   border-color: color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
 .login-orbit--md {
-  width: min(48vw, 22rem);
-  height: min(48vw, 22rem);
-  top: 8%;
-  left: -8%;
+  /* Top-left corner ring — flower sits on its center */
+  width: min(52vw, 18rem);
+  height: min(52vw, 18rem);
+  top: calc(min(52vw, 18rem) * -0.42);
+  left: calc(min(52vw, 18rem) * -0.42);
   border-color: color-mix(in srgb, var(--lime) 50%, transparent);
 }
 
 .login-orbit--sm {
-  width: min(36vw, 16rem);
-  height: min(36vw, 16rem);
-  bottom: -4%;
-  right: 12%;
+  /* Bottom-right corner ring — mirrors the top-left */
+  width: min(52vw, 18rem);
+  height: min(52vw, 18rem);
+  right: calc(min(52vw, 18rem) * -0.42);
+  bottom: calc(min(52vw, 18rem) * -0.42);
   border-color: color-mix(in srgb, var(--accent-deep) 30%, transparent);
 }
 
@@ -249,13 +253,13 @@ img, video, iframe {
 }
 
 .bloom-flower--tl {
-  top: -2%;
-  left: -3%;
+  top: calc(220px * -0.42);
+  left: calc(220px * -0.42);
 }
 
 .bloom-flower--br {
-  right: -4%;
-  bottom: -3%;
+  right: calc(220px * -0.42);
+  bottom: calc(220px * -0.42);
 }
 
 .bloom-flower--mirror {
@@ -277,18 +281,40 @@ img, video, iframe {
 }
 
 @media (max-width: 639px) {
-  .bloom-flower--tl {
-    top: -6%;
-    left: -14%;
+  .login-orbit--md,
+  .login-orbit--sm {
+    width: 11.5rem;
+    height: 11.5rem;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+  }
+
+  .login-orbit--md {
+    top: calc(11.5rem * -0.42);
+    left: calc(11.5rem * -0.42);
+  }
+
+  .login-orbit--sm {
+    right: calc(11.5rem * -0.42);
+    bottom: calc(11.5rem * -0.42);
+  }
+
+  .bloom-flower--tl,
+  .bloom-flower--br {
     width: 150px !important;
     height: 150px !important;
   }
 
+  .bloom-flower--tl {
+    top: calc(150px * -0.42);
+    left: calc(150px * -0.42);
+  }
+
   .bloom-flower--br {
-    right: -16%;
-    bottom: -8%;
-    width: 140px !important;
-    height: 140px !important;
+    right: calc(150px * -0.42);
+    bottom: calc(150px * -0.42);
   }
 }
 

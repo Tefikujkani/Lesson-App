@@ -1078,9 +1078,6 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 <Menu className="w-4 h-4" />
                 <span className="hidden xs:inline text-[10px] font-bold uppercase tracking-wider sm:inline">Files</span>
               </button>
-              <span className="hidden md:inline text-[10px] uppercase tracking-widest bg-gradient-to-r from-[#4f8f28] to-[#7cbc3d] text-white px-2.5 py-0.5 font-bold shrink-0 rounded-full">
-                Garden chat
-              </span>
               <h1 className="font-display text-[13px] sm:text-base font-extrabold text-ink truncate tracking-tight min-w-0">
                 {currentLecture ? currentLecture.title : "Ask anything"}
               </h1>
@@ -1294,7 +1291,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                       <div className="space-y-1 min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] uppercase tracking-widest text-[#5f7a62] font-semibold">
-                            {isTutor ? "Garden Tutor" : "You"}
+                            {isTutor ? "Study Hub" : "You"}
                           </span>
                           <span className="text-[9px] text-[#8aa88f] font-medium">{msg.timestamp}</span>
                         </div>
@@ -1325,7 +1322,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 <div className="flex items-start gap-3">
                   <div className="chat-avatar chat-avatar--tutor animate-pulse">AI</div>
                   <div className="space-y-1.5">
-                    <p className="text-[10px] uppercase tracking-widest text-[#5f7a62] font-semibold">Garden Tutor</p>
+                    <p className="text-[10px] uppercase tracking-widest text-[#5f7a62] font-semibold">Study Hub</p>
                     <div className="chat-bubble chat-bubble--tutor flex items-center space-x-3">
                       <span className="text-xs text-[#3d5c47]">Growing an answer…</span>
                       <div className="flex space-x-1 shrink-0">

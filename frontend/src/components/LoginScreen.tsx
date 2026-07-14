@@ -183,8 +183,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
         transition={{ duration: 1.1, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
       />
 
-      <BloomFlower className="bloom-flower--tl" delay={0.05} size={260} />
-      <BloomFlower className="bloom-flower--br" delay={0.28} size={240} mirror />
+      <BloomFlower className="bloom-flower--tl" delay={0.05} size={220} />
+      <BloomFlower className="bloom-flower--br" delay={0.28} size={220} mirror />
 
       <motion.div
         className="login-stage"
@@ -215,7 +215,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.45, delay: 0.28 }}
           >
-            Your lectures, chat, and quizzes — one place.
+            Your lectures and quizzes — one place.
           </motion.p>
         </header>
 
