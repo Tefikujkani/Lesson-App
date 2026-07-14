@@ -58,27 +58,25 @@ img, video, iframe {
   max-width: 100%;
 }
 
-/* ── App shell atmosphere ──────────────────────────────────────── */
+/* ── App shell atmosphere (soft garden mist) ───────────────────── */
 
 .app-shell {
   position: relative;
   color: var(--ink);
   background:
-    radial-gradient(ellipse 70% 50% at 0% 0%, var(--glow), transparent 55%),
-    radial-gradient(ellipse 55% 40% at 100% 100%, rgba(232, 165, 75, 0.1), transparent 50%),
-    linear-gradient(155deg, #dce9ec 0%, var(--paper) 45%, #eef6f4 100%);
+    radial-gradient(ellipse 55% 45% at 8% 12%, rgba(143, 196, 160, 0.28), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 94% 88%, rgba(240, 184, 168, 0.22), transparent 55%),
+    radial-gradient(ellipse 40% 35% at 70% 20%, rgba(13, 143, 124, 0.08), transparent 50%),
+    linear-gradient(165deg, #e4f0e8 0%, var(--paper) 48%, #f7f1ec 100%);
 }
 
 .app-shell::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(var(--line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--line) 1px, transparent 1px);
-  background-size: 48px 48px;
-  opacity: 0.16;
-  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 10%, transparent 80%);
+  background:
+    radial-gradient(circle at 18% 78%, rgba(111, 168, 131, 0.12), transparent 28%),
+    radial-gradient(circle at 82% 18%, rgba(232, 165, 75, 0.1), transparent 26%);
   pointer-events: none;
   z-index: 0;
 }
@@ -88,18 +86,18 @@ img, video, iframe {
 }
 
 .app-panel {
-  background: color-mix(in srgb, white 72%, transparent);
-  backdrop-filter: blur(10px);
-  border-color: var(--line);
+  background: color-mix(in srgb, white 78%, transparent);
+  backdrop-filter: blur(12px);
+  border-color: color-mix(in srgb, var(--line) 70%, #b8d4c0);
 }
 
 .app-sidebar {
-  background: color-mix(in srgb, white 78%, var(--mist));
-  backdrop-filter: blur(12px);
+  background: color-mix(in srgb, white 82%, #e8f3ec);
+  backdrop-filter: blur(14px);
 }
 
 .app-main {
-  background: color-mix(in srgb, white 88%, transparent);
+  background: color-mix(in srgb, white 90%, #f3f8f4);
 }
 
 .app-btn-primary {
@@ -118,7 +116,7 @@ img, video, iframe {
   box-shadow: 0 0 0 1px var(--accent);
 }
 
-/* ── Login surface ─────────────────────────────────────────────── */
+/* ── Login surface (natural garden) ────────────────────────────── */
 
 .login-shell {
   min-height: 100dvh;
@@ -131,44 +129,71 @@ img, video, iframe {
   font-family: var(--font-sans);
   color: var(--login-ink);
   background:
-    radial-gradient(ellipse 80% 60% at 12% 18%, var(--login-glow), transparent 55%),
-    radial-gradient(ellipse 70% 50% at 88% 82%, rgba(232, 165, 75, 0.14), transparent 50%),
-    linear-gradient(155deg, #dce9ec 0%, var(--login-paper) 42%, #eef6f4 100%);
+    radial-gradient(ellipse 60% 50% at 0% 0%, rgba(143, 196, 160, 0.35), transparent 58%),
+    radial-gradient(ellipse 55% 45% at 100% 100%, rgba(242, 184, 168, 0.32), transparent 52%),
+    radial-gradient(ellipse 45% 40% at 80% 15%, rgba(232, 165, 75, 0.12), transparent 50%),
+    linear-gradient(160deg, #ddeee4 0%, #f4f8f6 42%, #f8f0ea 100%);
 }
 
 .login-shell::before {
   content: "";
   position: absolute;
   inset: 0;
-  background-image:
-    linear-gradient(var(--login-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--login-line) 1px, transparent 1px);
-  background-size: 48px 48px;
-  opacity: 0.28;
-  mask-image: radial-gradient(ellipse 70% 65% at 50% 45%, black 20%, transparent 75%);
+  background:
+    radial-gradient(ellipse 50% 40% at 30% 70%, rgba(111, 168, 131, 0.14), transparent 60%),
+    radial-gradient(ellipse 40% 35% at 75% 30%, rgba(240, 195, 90, 0.1), transparent 55%);
   pointer-events: none;
 }
 
-.login-orbit {
+.bloom-flower {
   position: absolute;
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--login-accent) 35%, transparent);
+  z-index: 0;
   pointer-events: none;
+  user-select: none;
 }
 
-.login-orbit--lg {
-  width: min(72vw, 34rem);
-  height: min(72vw, 34rem);
-  top: -12%;
-  right: -8%;
+.bloom-flower--tl {
+  top: -2%;
+  left: -3%;
 }
 
-.login-orbit--sm {
-  width: min(40vw, 18rem);
-  height: min(40vw, 18rem);
-  bottom: -6%;
-  left: -4%;
-  border-color: color-mix(in srgb, var(--login-warm) 40%, transparent);
+.bloom-flower--br {
+  right: -4%;
+  bottom: -3%;
+}
+
+.bloom-flower--mirror {
+  transform: scaleX(-1);
+}
+
+.bloom-flower__svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  filter: drop-shadow(0 12px 28px rgba(90, 120, 100, 0.12));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bloom-flower * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@media (max-width: 639px) {
+  .bloom-flower--tl {
+    top: -6%;
+    left: -14%;
+    width: 150px !important;
+    height: 150px !important;
+  }
+
+  .bloom-flower--br {
+    right: -16%;
+    bottom: -8%;
+    width: 140px !important;
+    height: 140px !important;
+  }
 }
 
 .login-stage {
@@ -192,10 +217,10 @@ img, video, iframe {
   width: 3rem;
   height: 3rem;
   margin-bottom: 1rem;
-  border-radius: 0.85rem;
-  background: var(--login-ink);
+  border-radius: 999px;
+  background: linear-gradient(145deg, #0c1a1f 0%, #076b5c 100%);
   color: var(--login-paper);
-  box-shadow: 0 12px 28px -12px var(--login-glow);
+  box-shadow: 0 14px 32px -14px rgba(7, 107, 92, 0.45);
 }
 
 .login-brand__name {
@@ -461,8 +486,7 @@ img, video, iframe {
 
 @media (max-width: 639px) {
   .app-shell::before {
-    opacity: 0.08;
-    background-size: 36px 36px;
+    opacity: 0.7;
   }
 
   .login-shell {

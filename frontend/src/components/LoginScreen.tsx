@@ -3,6 +3,7 @@ import { GraduationCap, Mail, Lock, User as UserIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { User } from "../types.ts";
 import { apiFetch, setAuthSession } from "../lib/api.ts";
+import { BloomFlower } from "./BloomFlower.tsx";
 
 interface LoginScreenProps {
   onLoginSuccess: (user: User) => void;
@@ -160,20 +161,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
 
   return (
     <div id="login-container" className="login-shell">
-      <motion.div
-        className="login-orbit login-orbit--lg"
-        aria-hidden
-        initial={{ opacity: 0, scale: 0.92 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-      />
-      <motion.div
-        className="login-orbit login-orbit--sm"
-        aria-hidden
-        initial={{ opacity: 0, scale: 0.92 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.1, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-      />
+      <BloomFlower className="bloom-flower--tl" delay={0.05} size={260} />
+      <BloomFlower className="bloom-flower--br" delay={0.28} size={240} mirror />
 
       <motion.div
         className="login-stage"
