@@ -265,10 +265,147 @@ img, video, iframe {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bloom-flower * {
+  .bloom-flower *,
+  .turning-book * {
     animation: none !important;
     transition: none !important;
   }
+}
+
+.turning-book {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.turning-book--tr {
+  top: 11%;
+  right: 4%;
+}
+
+.turning-book--bl {
+  bottom: 10%;
+  left: 3%;
+}
+
+.turning-book__stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  perspective: 900px;
+  transform-style: preserve-3d;
+}
+
+.turning-book__shadow {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  bottom: 2%;
+  height: 18%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(26, 51, 36, 0.18), transparent 70%);
+  filter: blur(4px);
+}
+
+.turning-book__cover {
+  position: absolute;
+  top: 12%;
+  bottom: 14%;
+  width: 44%;
+  border-radius: 3px 6px 6px 3px;
+  box-shadow: 0 10px 22px -12px rgba(26, 51, 36, 0.35);
+}
+
+.turning-book__cover--left {
+  left: 6%;
+  transform: skewY(-1.5deg);
+}
+
+.turning-book__cover--right {
+  right: 6%;
+  transform: skewY(1.5deg);
+  border-radius: 6px 3px 3px 6px;
+}
+
+.turning-book__spine {
+  position: absolute;
+  top: 0;
+  right: -3%;
+  width: 10%;
+  height: 100%;
+  border-radius: 1px;
+  opacity: 0.9;
+}
+
+.turning-book__pages {
+  position: absolute;
+  inset: 7% 8% 7% 10%;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(26, 51, 36, 0.06);
+}
+
+.turning-book__pages--left {
+  inset: 7% 10% 7% 8%;
+}
+
+.turning-book__pages span {
+  display: block;
+  height: 1px;
+  margin: 14% 10% 0;
+  background: color-mix(in srgb, var(--ink-soft) 18%, transparent);
+}
+
+.turning-book__flip {
+  position: absolute;
+  top: 16%;
+  left: 50%;
+  width: 40%;
+  height: 66%;
+  transform-style: preserve-3d;
+}
+
+.turning-book__leaf {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 2px 5px 5px 2px;
+  background: linear-gradient(180deg, #fbfdf8 0%, #eef6e8 100%);
+  box-shadow:
+    0 8px 18px -14px rgba(26, 51, 36, 0.45),
+    inset -4px 0 8px rgba(26, 51, 36, 0.04);
+}
+
+.turning-book__leaf--back {
+  transform: rotateY(180deg);
+  background: linear-gradient(180deg, #f4faf0 0%, #e4f0dc 100%);
+}
+
+.turning-book__lines {
+  position: absolute;
+  inset: 12% 12% 14% 14%;
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 9px,
+      color-mix(in srgb, var(--ink-soft) 16%, transparent) 9px,
+      color-mix(in srgb, var(--ink-soft) 16%, transparent) 10px
+    );
+  opacity: 0.75;
+  border-radius: 1px;
+}
+
+.turning-book__lines--dense {
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 7px,
+      color-mix(in srgb, var(--ink-soft) 14%, transparent) 7px,
+      color-mix(in srgb, var(--ink-soft) 14%, transparent) 8px
+    );
 }
 
 @media (max-width: 639px) {
@@ -286,6 +423,20 @@ img, video, iframe {
   .bloom-flower--br {
     right: 0.15rem;
     bottom: 0.15rem;
+  }
+
+  .turning-book--tr {
+    top: 8%;
+    right: 2%;
+    width: 96px !important;
+    height: 74px !important;
+  }
+
+  .turning-book--bl {
+    bottom: 7%;
+    left: 1%;
+    width: 88px !important;
+    height: 68px !important;
   }
 }
 

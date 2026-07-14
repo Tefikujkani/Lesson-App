@@ -4,6 +4,7 @@ import { motion } from "motion/react";
 import { User } from "../types.ts";
 import { apiFetch, setAuthSession } from "../lib/api.ts";
 import { BloomFlower } from "./BloomFlower.tsx";
+import { TurningBook } from "./TurningBook.tsx";
 
 interface LoginScreenProps {
   onLoginSuccess: (user: User) => void;
@@ -171,6 +172,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
 
       <BloomFlower className="bloom-flower--tl" delay={0.05} size={210} />
       <BloomFlower className="bloom-flower--br" delay={0.28} size={210} mirror />
+      <TurningBook className="turning-book--tr" delay={0.2} size={148} tone="moss" />
+      <TurningBook className="turning-book--bl" delay={0.4} size={132} tone="olive" />
 
       <motion.div
         className="login-stage"
