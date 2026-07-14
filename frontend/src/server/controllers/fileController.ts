@@ -4,6 +4,7 @@ import {
   groqChatCompletion,
   parseJsonFromModel,
 } from "../config/groq.ts";
+import { extractPdfTextFromDataUrl, isPdfUpload } from "../lib/extractPdfText.ts";
 
 function parseDataUrl(dataUrl: string) {
   const matches = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
@@ -17,7 +18,8 @@ function parseDataUrl(dataUrl: string) {
 }
 
 /**
- * Analyze dropped file content (text or image) via Groq.
+ * Analyze dropped file content (text, PDF, or image) via Groq.
+ * PDFs are text-extracted first so the tutor can ground on real page content.
  */
 export async function analyzeFileContent(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
@@ -39,10 +41,39 @@ export async function analyzeFileContent(req: Request, res: Response, next: Next
 Be accurate and academic. Avoid generic names like "Lecture" or "Document".`;
 
     const parsed = fileDataUrl ? parseDataUrl(fileDataUrl) : null;
+    let resolvedText = typeof fileText === "string" ? fileText : "";
+    let extractedText = "";
+    let usedPdfExtraction = false;
+
+    if (parsed && isPdfUpload(parsed.mimeType, fileName)) {
+      try {
+        extractedText = await extractPdfTextFromDataUrl(fileDataUrl);
+        usedPdfExtraction = true;
+        if (extractedText) {
+          resolvedText = extractedText;
+        }
+      } catch (err) {
+        console.error("PDF text extraction failed:", err);
+      }
+    }
+
     let userContent: string | Array<{ type: string; text?: string; image_url?: { url: string } }>;
     let model: string | undefined;
 
-    if (parsed) {
+    if (usedPdfExtraction) {
+      const pdfBody = resolvedText
+        ? resolvedText.slice(0, 20000)
+        : "(No selectable text was found in this PDF. It may be a scanned/image-only document.)";
+
+      userContent = `Analyze this uploaded PDF lecture material.
+Original file name: "${fileName || "uploaded.pdf"}"
+
+=== PDF EXTRACTED TEXT START ===
+${pdfBody}
+=== PDF EXTRACTED TEXT END ===
+
+Suggest title, subject, summary, and a useful markdown study guide in "content" grounded in the extracted text when available.`;
+    } else if (parsed) {
       model = GROQ_VISION_MODEL;
       userContent = [
         {
@@ -62,7 +93,7 @@ This is a visual/multimodal file. Transcribe visible text, explain diagrams/equa
 Original file name: "${fileName || "uploaded_notes.txt"}"
 
 === DOCUMENT CONTENT START ===
-${(fileText || "").slice(0, 15000)}
+${resolvedText.slice(0, 15000)}
 === DOCUMENT CONTENT END ===
 
 Suggest title, subject, summary, and optional content outline.`;
@@ -88,6 +119,7 @@ Suggest title, subject, summary, and optional content outline.`;
       subject: analysisResult.subject,
       summary: analysisResult.summary || "",
       content: analysisResult.content || "",
+      extractedText: extractedText || undefined,
     });
   } catch (error: any) {
     next(error);

@@ -129,6 +129,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
 
       let detectedTitle = "";
       let finalContent = fileText;
+      let extractedOriginal = fileText;
 
       if (response.ok) {
         const result = await response.json();
@@ -136,6 +137,9 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
         
         if (result.content && result.content.trim()) {
           finalContent = result.content;
+        }
+        if (typeof result.extractedText === "string" && result.extractedText.trim()) {
+          extractedOriginal = result.extractedText.trim();
         }
       } else {
         console.warn("AI Analysis returned non-ok status, falling back to file name.");
@@ -163,7 +167,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
         fileName: file.name,
         fileType: detectedFileType,
         fileDataUrl: fileDataUrl,
-        originalText: fileText
+        originalText: detectedFileType === "image" ? "" : (extractedOriginal || fileText || finalContent)
       });
     } catch (err) {
       console.error("AI Analysis failed inside modal, running fallback:", err);
@@ -182,7 +186,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
         fileName: file.name,
         fileType: detectedFileType,
         fileDataUrl: fileDataUrl,
-        originalText: fileText
+        originalText: detectedFileType === "image" ? "" : fileText
       });
     } finally {
       setIsLoading(false);

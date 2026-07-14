@@ -16,7 +16,8 @@ export async function handleStudyChat(req: Request, res: Response, next: NextFun
     const context = typeof lectureContext === "string" ? lectureContext : "";
     const nameVal = typeof fileName === "string" ? fileName : "reference document";
     const typeVal = typeof fileType === "string" ? fileType : "text";
-    const originalTextVal = typeof originalText === "string" ? originalText : context;
+    const originalTextRaw = typeof originalText === "string" ? originalText : context;
+    const originalTextVal = originalTextRaw.slice(0, 20000);
     const hasLectureContext = context.trim().length > 0;
 
     const systemInstruction = hasLectureContext

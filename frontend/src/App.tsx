@@ -95,6 +95,7 @@ export default function App() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [droppedFileName, setDroppedFileName] = useState("");
   const [droppedFileText, setDroppedFileText] = useState("");
+  const [droppedOriginalText, setDroppedOriginalText] = useState("");
   const [droppedFileDataUrl, setDroppedFileDataUrl] = useState("");
   const [droppedFileType, setDroppedFileType] = useState<"text" | "image" | "pdf">("text");
   const [suggestedTitle, setSuggestedTitle] = useState("");
@@ -586,6 +587,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
               subject?: string;
               summary?: string;
               content?: string;
+              extractedText?: string;
             }>("/api/analyze-file", {
               method: "POST",
               body: JSON.stringify({
@@ -597,9 +599,12 @@ I have analyzed your lecture material and am fully grounded in its source conten
             setSuggestedTitle(result.title || file.name.replace(/\.[^/.]+$/, ""));
             setSuggestedSubject(result.subject || "General Study");
             setSuggestedSummary(result.summary || "Summarized study notes.");
-            
-            const detectedContent = result.content || `# ${result.title || file.name.replace(/\.[^/.]+$/, "")}\n\nThis is an analyzed document from the file **${file.name}**.`;
-            setDroppedFileText(detectedContent);
+
+            const studyGuide =
+              result.content ||
+              `# ${result.title || file.name.replace(/\.[^/.]+$/, "")}\n\nThis is an analyzed document from the file **${file.name}**.`;
+            setDroppedFileText(studyGuide);
+            setDroppedOriginalText(isPdf ? (result.extractedText?.trim() || "") : "");
           } catch (err) {
             console.error("AI Analysis failed, falling back:", err);
             const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[_-]/g, " ");
@@ -608,6 +613,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
             setSuggestedSubject("General Study");
             setSuggestedSummary("A customized study guide parsed from your document.");
             setDroppedFileText(`# ${fallbackTitle}\n\nUploaded file: **${file.name}**`);
+            setDroppedOriginalText("");
           } finally {
             setUploadLoading(false);
           }
@@ -625,6 +631,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
         const text = event.target?.result;
         if (typeof text === "string" && text.trim()) {
           setDroppedFileText(text);
+          setDroppedOriginalText(text);
 
           try {
             const result = await apiFetch<{
@@ -680,7 +687,10 @@ I have analyzed your lecture material and am fully grounded in its source conten
       fileName: droppedFileName,
       fileType: droppedFileType,
       fileDataUrl: droppedFileDataUrl,
-      originalText: droppedFileType === "text" ? droppedFileText : ""
+      originalText:
+        droppedFileType === "text" || droppedFileType === "pdf"
+          ? (droppedOriginalText || droppedFileText)
+          : ""
     };
 
     if (existingSubject) {
@@ -708,6 +718,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
     // Clean drop buffer
     setDroppedFileName("");
     setDroppedFileText("");
+    setDroppedOriginalText("");
     setDroppedFileDataUrl("");
     setDroppedFileType("text");
     setSuggestedTitle("");
