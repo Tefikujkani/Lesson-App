@@ -99,7 +99,11 @@ img, video, iframe {
 }
 
 .app-main {
-  background: color-mix(in srgb, white 92%, #f0f9e8);
+  background:
+    radial-gradient(ellipse 50% 42% at 92% 8%, rgba(182, 232, 92, 0.18), transparent 58%),
+    radial-gradient(ellipse 42% 38% at 6% 88%, rgba(124, 188, 61, 0.12), transparent 55%),
+    radial-gradient(ellipse 35% 30% at 70% 70%, rgba(200, 232, 106, 0.1), transparent 60%),
+    linear-gradient(165deg, #fbfdf8 0%, #f4f9ec 45%, #eef6e4 100%);
 }
 
 .app-btn-primary {
@@ -809,34 +813,79 @@ img, video, iframe {
 .chat-orbit {
   position: absolute;
   border-radius: 50%;
-  border: 1.5px solid color-mix(in srgb, var(--lime) 28%, transparent);
+  border: 1.5px solid color-mix(in srgb, var(--lime) 34%, transparent);
 }
 
 .chat-orbit--lg {
   width: min(70vw, 28rem);
   height: min(70vw, 28rem);
-  top: 12%;
-  right: -18%;
-  border-color: color-mix(in srgb, var(--accent) 22%, transparent);
-  opacity: 0.55;
+  top: 8%;
+  right: -16%;
+  border-color: color-mix(in srgb, var(--accent) 28%, transparent);
+  opacity: 0.62;
 }
 
 .chat-orbit--md {
   width: min(48vw, 18rem);
   height: min(48vw, 18rem);
-  bottom: 8%;
-  left: -14%;
-  border-color: color-mix(in srgb, var(--lime) 32%, transparent);
-  opacity: 0.5;
+  bottom: 6%;
+  left: -12%;
+  border-color: color-mix(in srgb, var(--lime) 36%, transparent);
+  opacity: 0.58;
 }
 
 .chat-orbit--sm {
   width: min(32vw, 12rem);
   height: min(32vw, 12rem);
-  top: 42%;
+  top: 40%;
   left: 58%;
-  border-color: color-mix(in srgb, var(--accent-deep) 16%, transparent);
-  opacity: 0.4;
+  border-color: color-mix(in srgb, var(--accent-deep) 22%, transparent);
+  opacity: 0.48;
+}
+
+.chat-orbit--a {
+  width: 5rem;
+  height: 5rem;
+  top: 18%;
+  left: 12%;
+  border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  opacity: 0.55;
+}
+
+.chat-orbit--b {
+  width: 3rem;
+  height: 3rem;
+  top: 58%;
+  right: 18%;
+  border-color: color-mix(in srgb, var(--lime) 40%, transparent);
+  opacity: 0.5;
+}
+
+.chat-orbit--c {
+  width: min(24vw, 9rem);
+  height: min(24vw, 9rem);
+  bottom: 22%;
+  right: 6%;
+  border-color: color-mix(in srgb, var(--accent-deep) 24%, transparent);
+  opacity: 0.5;
+}
+
+.chat-orbit--d {
+  width: 2.25rem;
+  height: 2.25rem;
+  top: 30%;
+  right: 28%;
+  border-color: color-mix(in srgb, var(--accent) 34%, transparent);
+  opacity: 0.55;
+}
+
+.chat-orbit--e {
+  width: min(22vw, 8rem);
+  height: min(22vw, 8rem);
+  top: 62%;
+  left: 22%;
+  border-color: color-mix(in srgb, var(--lime) 32%, transparent);
+  opacity: 0.45;
 }
 
 #chat-workspace > *:not(.chat-orbits) {

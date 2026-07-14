@@ -1070,6 +1070,11 @@ I have analyzed your lecture material and am fully grounded in its source conten
             <div className="chat-orbit chat-orbit--lg" />
             <div className="chat-orbit chat-orbit--md" />
             <div className="chat-orbit chat-orbit--sm" />
+            <div className="chat-orbit chat-orbit--a" />
+            <div className="chat-orbit chat-orbit--b" />
+            <div className="chat-orbit chat-orbit--c" />
+            <div className="chat-orbit chat-orbit--d" />
+            <div className="chat-orbit chat-orbit--e" />
           </div>
           {/* Workspace Header */}
           <header className="min-h-12 sm:min-h-14 border-b border-[#c5ddb8] flex items-center justify-between gap-2 px-2.5 sm:px-5 lg:px-6 py-1.5 bg-white/80 backdrop-blur-sm z-10 flex-shrink-0">
@@ -1347,7 +1352,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
         </div>
 
         {/* Workspace Footer & Text Input Pane */}
-        <footer className="chat-composer px-3 pt-3 sm:px-5 sm:pt-4 lg:px-6 bg-[#f7fbf4]/90 border-t border-[#c5ddb8] flex-shrink-0 space-y-2.5 sm:space-y-3 backdrop-blur-sm">
+        <footer className="chat-composer px-3 pt-3 sm:px-5 sm:pt-4 lg:px-6 bg-[#f4f9ec]/80 border-t border-[#c5ddb8] flex-shrink-0 space-y-2.5 sm:space-y-3 backdrop-blur-sm">
           
           {/* Quick sample question suggestions based on active lecture */}
           {activeMessages.length <= 1 && !isSending && (
