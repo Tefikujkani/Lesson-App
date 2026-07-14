@@ -786,10 +786,15 @@ I have analyzed your lecture material and am fully grounded in its source conten
       {/* 1. LEFT SIDEBAR: Collapsible Subjects & Lectures */}
       <aside
         id="sidebar-curriculum"
-        className={`app-sidebar flex flex-col flex-shrink-0 border-r border-[#c5ddb8] transition-transform duration-200 ease-out lg:translate-x-0 ${
+        className={`app-sidebar flex flex-col flex-shrink-0 border-r border-[#c5ddb8] transition-transform duration-200 ease-out lg:translate-x-0 relative overflow-hidden ${
           mobileSidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
         }`}
       >
+        <div className="sidebar-orbits" aria-hidden>
+          <div className="sidebar-orbit sidebar-orbit--a" />
+          <div className="sidebar-orbit sidebar-orbit--b" />
+          <div className="sidebar-orbit sidebar-orbit--c" />
+        </div>
         
         {/* Sidebar Header */}
         <div className="px-4 py-4 sm:p-5 border-b border-[#c5ddb8] flex items-start justify-between gap-2 shrink-0">

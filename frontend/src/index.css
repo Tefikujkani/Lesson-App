@@ -94,8 +94,12 @@ img, video, iframe {
 }
 
 .app-sidebar {
-  background: color-mix(in srgb, white 86%, #e8f5e0);
+  background:
+    radial-gradient(ellipse 70% 40% at 100% 0%, rgba(182, 232, 92, 0.12), transparent 55%),
+    radial-gradient(ellipse 55% 35% at 0% 100%, rgba(124, 188, 61, 0.08), transparent 50%),
+    linear-gradient(180deg, #fbfdf8 0%, #f5f9ee 55%, #f0f6e8 100%);
   backdrop-filter: blur(14px);
+  isolation: isolate;
 }
 
 .app-main {
@@ -782,6 +786,52 @@ img, video, iframe {
   padding-top: env(safe-area-inset-top, 0);
   box-shadow: 8px 0 32px -16px rgba(12, 26, 31, 0.28);
   z-index: 40;
+}
+
+.sidebar-orbits {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.sidebar-orbit {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--lime) 30%, transparent);
+}
+
+.sidebar-orbit--a {
+  width: 7.5rem;
+  height: 7.5rem;
+  top: -1.5rem;
+  right: -2.5rem;
+  border-color: color-mix(in srgb, var(--accent) 26%, transparent);
+  opacity: 0.55;
+}
+
+.sidebar-orbit--b {
+  width: 3.5rem;
+  height: 3.5rem;
+  bottom: 22%;
+  left: -1rem;
+  border-color: color-mix(in srgb, var(--lime) 34%, transparent);
+  opacity: 0.5;
+}
+
+.sidebar-orbit--c {
+  width: 2.25rem;
+  height: 2.25rem;
+  top: 42%;
+  right: 1.25rem;
+  border-color: color-mix(in srgb, var(--accent-deep) 22%, transparent);
+  opacity: 0.45;
+}
+
+#sidebar-curriculum > *:not(.sidebar-orbits) {
+  position: relative;
+  z-index: 1;
 }
 
 @media (min-width: 1024px) {
