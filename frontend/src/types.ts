@@ -33,6 +33,11 @@ export interface User {
 export interface QuizQuestion {
   question: string;
   options: string[];
-  correctIndex: number;
+  /** Legacy single-answer index (still accepted from older quiz payloads). */
+  correctIndex?: number;
+  /** Preferred: one or more correct option indices (0-based). */
+  correctIndices?: number[];
+  /** When true, student may select multiple options before verifying. */
+  multiSelect?: boolean;
   explanation: string;
 }
