@@ -162,7 +162,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   return (
     <div id="login-container" className="login-shell">
       <motion.div
-        className="login-orbit login-orbit--lg"
+        className="login-orbit login-orbit--side"
         aria-hidden
         initial={{ opacity: 0, scale: 0.88 }}
         animate={{ opacity: 1, scale: 1 }}

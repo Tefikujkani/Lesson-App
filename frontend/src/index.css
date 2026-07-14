@@ -217,14 +217,13 @@ img, video, iframe {
   z-index: 0;
 }
 
-.login-orbit--lg {
-  width: min(72vw, 34rem);
-  height: min(72vw, 34rem);
-  top: 50%;
-  left: 50%;
-  margin-top: calc(min(72vw, 34rem) / -2);
-  margin-left: calc(min(72vw, 34rem) / -2);
-  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+.login-orbit--side {
+  /* Small outline on the side — was the big front circle */
+  width: min(28vw, 9.5rem);
+  height: min(28vw, 9.5rem);
+  top: 18%;
+  right: 6%;
+  border-color: color-mix(in srgb, var(--accent) 42%, transparent);
 }
 
 .login-orbit--md {
@@ -243,6 +242,15 @@ img, video, iframe {
   right: calc(min(52vw, 18rem) * -0.18);
   bottom: calc(min(52vw, 18rem) * -0.18);
   border-color: color-mix(in srgb, var(--accent-deep) 30%, transparent);
+}
+
+@media (max-width: 639px) {
+  .login-orbit--side {
+    width: 5.5rem;
+    height: 5.5rem;
+    top: 12%;
+    right: 4%;
+  }
 }
 
 .bloom-flower {
