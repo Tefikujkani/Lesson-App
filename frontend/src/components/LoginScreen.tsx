@@ -162,18 +162,11 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   return (
     <div id="login-container" className="login-shell">
       <motion.div
-        className="login-orbit login-orbit--halo"
-        aria-hidden
-        initial={{ opacity: 0, scale: 0.92 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.25, ease: [0.22, 1, 0.36, 1] }}
-      />
-      <motion.div
         className="login-orbit login-orbit--lg"
         aria-hidden
         initial={{ opacity: 0, scale: 0.88 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.2, delay: 0.04, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
       />
       <motion.div
         className="login-orbit login-orbit--md"
@@ -188,13 +181,6 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
         initial={{ opacity: 0, scale: 0.88 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.1, delay: 0.18, ease: [0.22, 1, 0.36, 1] }}
-      />
-      <motion.div
-        className="login-orbit login-orbit--side"
-        aria-hidden
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.1, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
       />
 
       <BloomFlower className="bloom-flower--tl" delay={0.05} size={210} />
