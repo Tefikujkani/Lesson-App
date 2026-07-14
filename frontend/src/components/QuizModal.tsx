@@ -36,6 +36,8 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [error, setError] = useState<string | null>(null);
+  /** Stems from earlier attempts this session — used so retakes avoid repeats. */
+  const [seenQuestions, setSeenQuestions] = useState<string[]>([]);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOptionIndexes, setSelectedOptionIndexes] = useState<number[]>([]);
@@ -43,7 +45,7 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
   const [score, setScore] = useState(0);
   const [userAnswers, setUserAnswers] = useState<number[][]>([]);
 
-  const fetchQuiz = async () => {
+  const fetchQuiz = async (opts?: { previousQuestions?: string[] }) => {
     setLoading(true);
     setError(null);
     setQuestions([]);
@@ -54,16 +56,24 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
     setUserAnswers([]);
 
     try {
+      const previousQuestions = opts?.previousQuestions ?? seenQuestions;
+
       const data = await apiFetch<{ quiz: QuizQuestion[] }>("/api/quiz", {
         method: "POST",
         body: JSON.stringify({
           lectureTitle,
           lectureContext,
+          previousQuestions,
         }),
       });
 
       if (data.quiz && Array.isArray(data.quiz) && data.quiz.length > 0) {
         setQuestions(data.quiz);
+        setSeenQuestions((prev) => {
+          const base = opts?.previousQuestions !== undefined ? opts.previousQuestions : prev;
+          const next = [...base, ...data.quiz.map((q) => q.question).filter(Boolean)];
+          return next.slice(-40);
+        });
       } else {
         throw new Error("Invalid quiz format received from AI backend.");
       }
@@ -76,7 +86,10 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
   };
 
   useEffect(() => {
-    fetchQuiz();
+    setSeenQuestions([]);
+    void fetchQuiz({ previousQuestions: [] });
+    // Fresh quiz whenever the active lecture changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lectureTitle]);
 
   const handleOptionSelect = (index: number) => {
