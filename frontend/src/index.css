@@ -417,6 +417,15 @@ img, video, iframe {
   filter: brightness(1.06);
 }
 
+.login-submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.login-submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
 .login-input-wrap input:disabled {
   opacity: 0.6;
 }
@@ -430,36 +439,6 @@ img, video, iframe {
   color: #8b1e2d;
   background: color-mix(in srgb, #fde8ec 80%, white);
   border-left: 3px solid #c23b4e;
-}
-
-.login-submit {
-  width: 100%;
-  margin-top: 0.35rem;
-  padding: 0.95rem 1.25rem;
-  border: none;
-  border-radius: 0.65rem;
-  background: var(--login-ink);
-  color: var(--login-paper);
-  font-family: inherit;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.15s ease;
-}
-
-.login-submit:hover:not(:disabled) {
-  background: var(--login-accent-deep);
-}
-
-.login-submit:active:not(:disabled) {
-  transform: translateY(1px);
-}
-
-.login-submit:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
 }
 
 .login-divider {
