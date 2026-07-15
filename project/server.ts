@@ -1,10 +1,12 @@
 import express, { Request, Response, NextFunction } from "express";
+import http from "http";
 import path from "path";
 import cors from "cors";
 import dotenv from "dotenv";
 import { createServer as createViteServer } from "vite";
 import apiRouter from "./src/server/routes/api.ts";
 import { connectDatabase } from "./src/server/config/db.ts";
+import { attachRoomSocket } from "./src/server/realtime/roomSocket.ts";
 
 // Load .env then .env.local (local overrides)
 dotenv.config();
@@ -121,7 +123,10 @@ async function startServer() {
     });
   });
 
-  app.listen(PORT, "0.0.0.0", () => {
+  const httpServer = http.createServer(app);
+  attachRoomSocket(httpServer);
+
+  httpServer.listen(PORT, "0.0.0.0", () => {
     console.log(`Server listening at http://localhost:${PORT}`);
   });
 }

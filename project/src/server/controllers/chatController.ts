@@ -59,7 +59,7 @@ Follow these strict rules when answering the student:
 4. If the study guide and original file do NOT contain the answer, say this idea in the reply language (English form: "This wasn't covered directly in your lecture notes, but here is how it works...") and then answer from general academic knowledge.
 5. Keep your tone encouraging, patient, highly structured, and easy to follow. Use bullet points and clean markdown formatting where appropriate.
 6. Use the conversation history so short follow-ups like "now in English" or "explain simpler" still refer to the previous topic.`
-      : `You are a patient, encouraging, and clear academic tutor in Study Hub.
+      : `You are a patient, encouraging, and clear academic tutor in NoteLab.
 
 ${languageRules}
 
@@ -81,7 +81,7 @@ Use the conversation history so follow-ups continue the same topic instead of re
           priorMessages.push({ role: "user", content: text.slice(0, 4000) });
         } else if (sender === "tutor" || sender === "assistant") {
           // Skip the canned welcome so it does not dominate short-follow-up replies.
-          if (/i'?m your study hub tutor|greetings! i am your academic tutor/i.test(text)) continue;
+          if (/i'?m your (study hub|notelab) tutor|greetings! i am your academic tutor/i.test(text)) continue;
           priorMessages.push({ role: "assistant", content: text.slice(0, 4000) });
         }
       }

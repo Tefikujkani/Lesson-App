@@ -27,9 +27,12 @@ function normalizeQuizQuestion(raw: any) {
     [order[i], order[j]] = [order[j], order[i]];
   }
   const shuffledOptions = order.map((i) => options[i]);
-  const indexMap = new Map(order.map((oldIdx, newIdx) => [oldIdx, newIdx]));
+  const indexMap = new Map<number, number>(
+    order.map((oldIdx, newIdx) => [oldIdx, newIdx] as [number, number])
+  );
   const shuffledCorrect = correctIndices
-    .map((i) => indexMap.get(i)!)
+    .map((i) => indexMap.get(i))
+    .filter((n): n is number => typeof n === "number")
     .sort((a, b) => a - b);
 
   return {

@@ -50,6 +50,18 @@ body {
   margin: 0;
   overflow: hidden;
   overscroll-behavior: none;
+  /* Stop iOS from auto-zooming the whole page when focusing small inputs */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* iOS Safari zooms inputs under 16px — keep form controls at least that size on phones */
+@media (max-width: 1023px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 #root {

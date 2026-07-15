@@ -1,4 +1,4 @@
-# Study Hub — AI study assistant for students
+# NoteLab — AI study assistant for students
 
 React + Express + MongoDB + Google Gemini.
 
@@ -48,8 +48,28 @@ Open http://localhost:3000
 | POST | `/api/quiz` | Generate lecture quiz |
 | POST | `/api/analyze-file` | Analyze uploaded notes/images |
 
+## Group Study Room
+
+From the sidebar, open **Group Study Room** to create or join a lobby (max 10 students).
+
+| Feature | How it works |
+|---------|----------------|
+| Invite link | Share `/#/room/CODE` (or the copy button in-room) |
+| Voice | “Join voice” — mesh WebRTC between everyone in the room |
+| Chat | Real-time text via Socket.IO |
+| Whiteboard | Shared canvas; touch/stylus pressure supported |
+| AI Buddy | Tag `@AI` in chat for short funny analogies; `@AI hint` for a 1-sentence clue |
+
+| Method | Path | Description |
+|--------|------|-------------|
+| POST | `/api/rooms` | Create a room (auth) |
+| GET | `/api/rooms/:code` | Look up a room (auth) |
+| POST | `/api/rooms/ai` | Ask the room AI buddy (auth) |
+| WS | `/socket.io` | Presence, chat, whiteboard, WebRTC signaling |
+
 ## MongoDB collections
 
 - `users` — accounts
 - `subjects` — curriculum (subjects + embedded lectures) per user
 - `chathistories` — tutor chat threads per lecture
+- `studyrooms` — group study room metadata (invite codes)

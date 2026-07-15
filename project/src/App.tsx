@@ -27,7 +27,8 @@ import {
   Check,
   FileText,
   Image,
-  Menu
+  Menu,
+  UsersRound
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { SUBJECTS_DATA } from "./data.ts";
@@ -37,7 +38,14 @@ import { LoginScreen } from "./components/LoginScreen.tsx";
 import { AddLectureModal } from "./components/AddLectureModal.tsx";
 import { QuizModal } from "./components/QuizModal.tsx";
 import { SuggestedLectureModal } from "./components/SuggestedLectureModal.tsx";
+import { StudyRoomPage } from "./components/StudyRoomPage.tsx";
 import { apiFetch, clearAuthSession, getToken } from "./lib/api.ts";
+
+function parseRoomCodeFromHash(): string | null {
+  const hash = window.location.hash.replace(/^#/, "");
+  const match = hash.match(/^\/?room\/([A-Za-z0-9]{4,8})$/i);
+  return match ? match[1].toUpperCase() : null;
+}
 
 export default function App() {
   // 1. User Authentications State (JWT session from MongoDB-backed auth)
@@ -107,6 +115,24 @@ export default function App() {
   const [isAddLectureOpen, setIsAddLectureOpen] = useState(false);
   const [modalSubjectId, setModalSubjectId] = useState<string | undefined>(undefined);
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
+
+  // Group Study Room (linkable via /#/room/CODE)
+  const [showStudyRoom, setShowStudyRoom] = useState(() => Boolean(parseRoomCodeFromHash()));
+  const [studyRoomInviteCode, setStudyRoomInviteCode] = useState<string | null>(() =>
+    parseRoomCodeFromHash()
+  );
+
+  useEffect(() => {
+    const onHash = () => {
+      const code = parseRoomCodeFromHash();
+      if (code) {
+        setStudyRoomInviteCode(code);
+        setShowStudyRoom(true);
+      }
+    };
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
 
   // References
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -240,7 +266,7 @@ export default function App() {
         {
           id: "welcome-general",
           sender: "tutor",
-          text: `Hi — I'm your Study Hub tutor.
+          text: `Hi — I'm your NoteLab tutor.
 
 Ask me anything while you get set up. When you upload a lecture on the left, I can ground answers in that material too.`,
           timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
@@ -388,7 +414,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
 
   const handleDeleteAccount = async () => {
     const confirmed = window.confirm(
-      "Delete your Study Hub account and all saved lectures/chats? This cannot be undone."
+      "Delete your NoteLab account and all saved lectures/chats? This cannot be undone."
     );
     if (!confirmed) return;
 
@@ -750,9 +776,25 @@ I have analyzed your lecture material and am fully grounded in its source conten
     return <LoginScreen onLoginSuccess={(user) => setCurrentUser(user)} />;
   }
 
+  if (showStudyRoom) {
+    return (
+      <StudyRoomPage
+        user={currentUser}
+        initialCode={studyRoomInviteCode}
+        onExit={() => {
+          setShowStudyRoom(false);
+          setStudyRoomInviteCode(null);
+          if (parseRoomCodeFromHash()) {
+            window.location.hash = "";
+          }
+        }}
+      />
+    );
+  }
+
   return (
     <div 
-      id="study-hub-root" 
+      id="notelab-root" 
       className="app-shell flex h-[100dvh] max-h-[100dvh] text-[#1a3324] font-sans overflow-hidden relative"
       onDragOver={handleDragOver}
       onDragEnter={handleDragEnter}
@@ -821,7 +863,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
         {/* Sidebar Header */}
         <div className="px-4 py-4 sm:p-5 border-b border-[#c5ddb8] flex items-start justify-between gap-2 shrink-0">
           <div className="min-w-0">
-            <h2 className="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-ink leading-none">Study Hub</h2>
+            <h2 className="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-ink leading-none">NoteLab</h2>
             <p className="mt-1 text-[11px] sm:text-xs font-medium text-[#5f7a62]">Your lectures & tutors</p>
           </div>
           <button
@@ -870,6 +912,25 @@ I have analyzed your lecture material and am fully grounded in its source conten
             <Trash2 className="w-4 h-4" />
           </button>
           </div>
+        </div>
+
+        {/* Group Study Room */}
+        <div className="p-3 border-b border-[#c5ddb8]/60 bg-[#f7fbf4]">
+          <button
+            type="button"
+            onClick={() => {
+              setStudyRoomInviteCode(null);
+              setShowStudyRoom(true);
+              setMobileSidebarOpen(false);
+            }}
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-[#4f8f28] text-white font-bold text-xs sm:text-sm hover:bg-[#3f7a20] transition-colors shadow-sm"
+          >
+            <UsersRound className="w-4 h-4 shrink-0" />
+            Group Study Room
+          </button>
+          <p className="mt-1.5 text-[10px] text-[#5f7a62] leading-snug px-0.5">
+            Voice, chat, whiteboard &amp; @AI — up to 10 students
+          </p>
         </div>
 
         {/* Dynamic File Uploader & Reset actions */}
@@ -1332,7 +1393,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                       <div className="space-y-1 min-w-0 flex-1">
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] uppercase tracking-widest text-[#5f7a62] font-semibold">
-                            {isTutor ? "Study Hub" : "You"}
+                            {isTutor ? "NoteLab" : "You"}
                           </span>
                           <span className="text-[9px] text-[#8aa88f] font-medium">{msg.timestamp}</span>
                         </div>
@@ -1363,7 +1424,7 @@ I have analyzed your lecture material and am fully grounded in its source conten
                 <div className="flex items-start gap-3">
                   <div className="chat-avatar chat-avatar--tutor animate-pulse">AI</div>
                   <div className="space-y-1.5">
-                    <p className="text-[10px] uppercase tracking-widest text-[#5f7a62] font-semibold">Study Hub</p>
+                    <p className="text-[10px] uppercase tracking-widest text-[#5f7a62] font-semibold">NoteLab</p>
                     <div className="chat-bubble chat-bubble--tutor flex items-center space-x-3">
                       <span className="text-xs text-[#3d5c47]">Growing an answer…</span>
                       <div className="flex space-x-1 shrink-0">

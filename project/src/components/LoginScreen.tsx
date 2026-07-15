@@ -208,7 +208,7 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.14 }}
           >
-            Study Hub
+            NoteLab
           </motion.h1>
           <motion.p
             className="login-brand__tag"

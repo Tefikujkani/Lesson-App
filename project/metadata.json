@@ -1,6 +1,6 @@
 {
-  "name": "Student Study Hub",
-  "description": "An AI-powered student study hub featuring subjects and lectures with a dynamic tutor chat.",
+  "name": "NoteLab",
+  "description": "An AI-powered study app featuring subjects, lectures, quizzes, and group study rooms.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

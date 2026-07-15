@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "notelab",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -27,6 +27,8 @@
     "motion": "^12.23.24",
     "react": "^19.0.1",
     "react-dom": "^19.0.1",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
     "unpdf": "^1.6.2",
     "vite": "^6.2.3"
   },

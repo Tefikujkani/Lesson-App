@@ -1,5 +1,5 @@
 /**
- * Small client for the Study Hub Express API.
+ * Small client for the NoteLab Express API.
  * Attaches JWT from localStorage when present.
  */
 

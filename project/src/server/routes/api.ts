@@ -11,6 +11,8 @@ import {
   saveChatHistory,
 } from "../controllers/curriculumController.ts";
 import { requireAuth, optionalAuth } from "../middleware/auth.ts";
+import { createRoom, getRoomByCode } from "../controllers/roomController.ts";
+import { askRoomAi } from "../controllers/roomAiController.ts";
 
 const router: Router = express.Router();
 
@@ -31,6 +33,11 @@ router.delete("/curriculum", requireAuth, deleteCurriculum);
 /** Chat history (MongoDB) */
 router.get("/chat/:lectureId", requireAuth, getChatHistory);
 router.put("/chat/:lectureId", requireAuth, saveChatHistory);
+
+/** Group Study Rooms */
+router.post("/rooms", requireAuth, createRoom);
+router.get("/rooms/:code", requireAuth, getRoomByCode);
+router.post("/rooms/ai", requireAuth, askRoomAi);
 
 /**
  * AI routes — optional auth so guest demos still work;
