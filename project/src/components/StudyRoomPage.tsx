@@ -1068,7 +1068,7 @@ export function StudyRoomPage({ user, initialCode, onExit }: Props) {
                               e.stopPropagation();
                               deleteChat(m.id);
                             }}
-                            className="ml-auto opacity-70 sm:opacity-0 sm:group-hover:opacity-100 p-0.5 rounded text-[#5f7a62] hover:text-red-600 hover:bg-red-50 transition-opacity"
+                            className="ml-auto p-1 rounded-md text-[#6b8a6f] bg-[#eef5ea] hover:text-red-600 hover:bg-red-50"
                             aria-label="Delete message"
                             title="Delete message"
                           >
