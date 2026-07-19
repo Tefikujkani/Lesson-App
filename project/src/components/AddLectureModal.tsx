@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { X, BookOpen, UploadCloud, FileText, CheckCircle2, Loader2, Sparkles } from "lucide-react";
 import { Subject } from "../types.ts";
+import { apiUrl } from "../lib/api.ts";
 
 interface AddLectureModalProps {
   subjects: Subject[];
@@ -116,7 +117,7 @@ export function AddLectureModal({ subjects, preselectedSubjectId, onClose, onAdd
 
     try {
       // Send file content (text or image dataUrl) to backend
-      const response = await fetch("/api/analyze-file", {
+      const response = await fetch(apiUrl("/api/analyze-file"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

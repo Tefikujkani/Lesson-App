@@ -28,7 +28,7 @@ import {
   X,
   Trash2,
 } from "lucide-react";
-import { apiFetch, getToken } from "../lib/api.ts";
+import { apiFetch, getApiBaseUrl, getToken } from "../lib/api.ts";
 import type { User } from "../types.ts";
 import type {
   RoomAttachment,
@@ -79,6 +79,7 @@ export function StudyRoomPage({ user, initialCode, onExit }: Props) {
   const [phase, setPhase] = useState<"lobby" | "room">("lobby");
   const [roomName, setRoomName] = useState("");
   const [topic, setTopic] = useState("");
+  const [createAttempted, setCreateAttempted] = useState(false);
   const [joinCode, setJoinCode] = useState(initialCode?.toUpperCase() || "");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -108,6 +109,8 @@ export function StudyRoomPage({ user, initialCode, onExit }: Props) {
   const phaseRef = useRef<"lobby" | "room">("lobby");
   const reconnectingRef = useRef(false);
   const lastChatTapRef = useRef<{ id: string; at: number }>({ id: "", at: 0 });
+  const chatPointerDownRef = useRef<{ id: string; x: number; y: number } | null>(null);
+  const likeLockRef = useRef<Record<string, number>>({});
 
   const {
     micOn,
@@ -312,7 +315,10 @@ export function StudyRoomPage({ user, initialCode, onExit }: Props) {
         intentionallyLeavingRef.current = false;
       }
 
-      const s = io({ path: "/socket.io", transports: ["websocket", "polling"] });
+      const s = io(getApiBaseUrl() || undefined, {
+        path: "/socket.io",
+        transports: ["websocket", "polling"],
+      });
       bindSocketHandlers(s);
 
       await new Promise<void>((resolve, reject) => {
@@ -356,6 +362,13 @@ export function StudyRoomPage({ user, initialCode, onExit }: Props) {
   };
 
   const createRoom = async () => {
+    setCreateAttempted(true);
+    const name = roomName.trim();
+    const studyTopic = topic.trim();
+    if (!name || !studyTopic) {
+      setError("Enter a room name and what you are studying.");
+      return;
+    }
     setBusy(true);
     setError(null);
     setCreatedLink(null);
@@ -363,12 +376,12 @@ export function StudyRoomPage({ user, initialCode, onExit }: Props) {
       const created = await apiFetch<StudyRoomInfo & { joinUrl: string }>("/api/rooms", {
         method: "POST",
         body: JSON.stringify({
-          name: roomName.trim() || "Group Study Room",
-          topic: topic.trim(),
+          name,
+          topic: studyTopic,
           hostName: user.name,
         }),
       });
-      setCreatedLink(created.joinUrl || `${window.location.origin}/#/room/${created.code}`);
+      setCreatedLink(`${window.location.origin}/#/room/${created.code}`);
       await joinRoom(created.code, { manageBusy: false });
     } catch (err: any) {
       setError(err?.message || "Could not create room.");
@@ -487,28 +500,68 @@ export function StudyRoomPage({ user, initialCode, onExit }: Props) {
   };
 
   const likeChat = (messageId: string) => {
-    if (!socket) return;
+    if (!socket || !you) return;
+    const now = Date.now();
+    // Touch devices often fire tap + ghost dblclick — guard so we don't like then instantly unlike.
+    if ((likeLockRef.current[messageId] || 0) > now - 700) return;
+    likeLockRef.current[messageId] = now;
+
+    const uid = you.userId;
+    setMessages((prev) =>
+      prev.map((m) => {
+        if (m.id !== messageId) return m;
+        const likedBy = [...(m.likedBy || [])];
+        const i = likedBy.indexOf(uid);
+        if (i >= 0) likedBy.splice(i, 1);
+        else likedBy.push(uid);
+        return { ...m, likedBy };
+      })
+    );
+
     socket.emit(
       "room:chat-like",
       { messageId },
-      (result: { ok?: boolean; error?: string }) => {
+      (result: { ok?: boolean; error?: string; likedBy?: string[] }) => {
         if (result && result.ok === false) {
+          setMessages((prev) =>
+            prev.map((m) => {
+              if (m.id !== messageId) return m;
+              const likedBy = [...(m.likedBy || [])];
+              const i = likedBy.indexOf(uid);
+              if (i >= 0) likedBy.splice(i, 1);
+              else likedBy.push(uid);
+              return { ...m, likedBy };
+            })
+          );
           setError(result.error || "Could not like message.");
+          return;
+        }
+        if (result?.likedBy) {
+          setMessages((prev) =>
+            prev.map((m) => (m.id === messageId ? { ...m, likedBy: result.likedBy } : m))
+          );
         }
       }
     );
   };
 
-  const handleChatBubbleActivate = (messageId: string, userId: string) => {
+  const handleChatBubbleDoubleActivate = (
+    messageId: string,
+    userId: string,
+    clientX: number,
+    clientY: number
+  ) => {
     if (userId === "system") return;
-    likeChat(messageId);
-  };
-
-  const handleChatBubbleTap = (messageId: string, userId: string) => {
-    if (userId === "system") return;
+    const down = chatPointerDownRef.current;
+    chatPointerDownRef.current = null;
+    // Ignore if the finger/mouse moved (scroll), or pointer-down was on another bubble.
+    if (down && (down.id !== messageId || Math.hypot(clientX - down.x, clientY - down.y) > 14)) {
+      lastChatTapRef.current = { id: "", at: 0 };
+      return;
+    }
     const now = Date.now();
     const last = lastChatTapRef.current;
-    if (last.id === messageId && now - last.at < 350) {
+    if (last.id === messageId && now - last.at < 480) {
       lastChatTapRef.current = { id: "", at: 0 };
       likeChat(messageId);
       return;
@@ -1028,24 +1081,36 @@ export function StudyRoomPage({ user, initialCode, onExit }: Props) {
                 return (
                   <div
                     key={m.id}
-                    role={m.userId === "system" ? undefined : "button"}
                     tabIndex={m.userId === "system" ? undefined : 0}
-                    onDoubleClick={() => handleChatBubbleActivate(m.id, m.userId)}
-                    onTouchEnd={(e) => {
+                    onPointerDown={(e) => {
                       if (m.userId === "system") return;
-                      // Allow double-tap like without blocking scroll; only on bubble
                       if ((e.target as HTMLElement).closest("a, button, video")) return;
-                      handleChatBubbleTap(m.id, m.userId);
+                      if (e.pointerType === "mouse" && e.button !== 0) return;
+                      chatPointerDownRef.current = {
+                        id: m.id,
+                        x: e.clientX,
+                        y: e.clientY,
+                      };
+                    }}
+                    onPointerUp={(e) => {
+                      if (m.userId === "system") return;
+                      if ((e.target as HTMLElement).closest("a, button, video")) return;
+                      if (e.pointerType === "mouse" && e.button !== 0) return;
+                      handleChatBubbleDoubleActivate(m.id, m.userId, e.clientX, e.clientY);
+                    }}
+                    onPointerCancel={() => {
+                      chatPointerDownRef.current = null;
+                      lastChatTapRef.current = { id: "", at: 0 };
                     }}
                     onKeyDown={(e) => {
                       if (m.userId === "system") return;
                       if (e.key === "Enter" || e.key === " ") {
                         e.preventDefault();
-                        handleChatBubbleActivate(m.id, m.userId);
+                        likeChat(m.id);
                       }
                     }}
                     title={m.userId === "system" ? undefined : "Double-click or double-tap to 👍"}
-                    className={`group relative rounded-xl px-3 py-2 text-sm select-none ${
+                    className={`group relative rounded-xl px-3 py-2 text-sm select-none touch-manipulation ${
                       m.isAi
                         ? "bg-[#e8f5e0] border border-[#c5ddb8]"
                         : m.userId === "system"
@@ -1274,19 +1339,37 @@ export function StudyRoomPage({ user, initialCode, onExit }: Props) {
                 value={roomName}
                 onChange={(e) => setRoomName(e.target.value)}
                 placeholder="Friday Study Squad"
-                className="w-full rounded-xl border border-[#c5ddb8] bg-[#f7fbf4] px-3 py-2 text-base outline-none focus:border-[#4f8f28]"
+                required
+                aria-invalid={createAttempted && !roomName.trim()}
+                className={`w-full rounded-xl border bg-[#f7fbf4] px-3 py-2 text-base outline-none focus:border-[#4f8f28] ${
+                  createAttempted && !roomName.trim() ? "border-red-400" : "border-[#c5ddb8]"
+                }`}
               />
+              {createAttempted && !roomName.trim() && (
+                <span className="block text-[11px] font-semibold text-red-600">
+                  Please enter a room name.
+                </span>
+              )}
             </label>
             <label className="block space-y-1">
               <span className="text-[11px] font-semibold uppercase tracking-wide text-[#5f7a62]">
-                What are you studying? (optional)
+                What are you studying?
               </span>
               <input
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 placeholder="e.g. Calculus limits, Python loops…"
-                className="w-full rounded-xl border border-[#c5ddb8] bg-[#f7fbf4] px-3 py-2 text-base outline-none focus:border-[#4f8f28]"
+                required
+                aria-invalid={createAttempted && !topic.trim()}
+                className={`w-full rounded-xl border bg-[#f7fbf4] px-3 py-2 text-base outline-none focus:border-[#4f8f28] ${
+                  createAttempted && !topic.trim() ? "border-red-400" : "border-[#c5ddb8]"
+                }`}
               />
+              {createAttempted && !topic.trim() && (
+                <span className="block text-[11px] font-semibold text-red-600">
+                  Please enter what you are studying.
+                </span>
+              )}
             </label>
             <button
               type="button"

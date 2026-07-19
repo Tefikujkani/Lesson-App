@@ -6,6 +6,15 @@
 const TOKEN_KEY = "study_hub_token";
 const USER_KEY = "study_hub_user";
 
+export function getApiBaseUrl(): string {
+  return String(import.meta.env.VITE_API_URL || "").trim().replace(/\/+$/, "");
+}
+
+export function apiUrl(path: string): string {
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${getApiBaseUrl()}${normalizedPath}`;
+}
+
 export function getToken(): string | null {
   return localStorage.getItem(TOKEN_KEY);
 }
@@ -35,7 +44,7 @@ export async function apiFetch<T = any>(
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const response = await fetch(path, { ...options, headers });
+  const response = await fetch(apiUrl(path), { ...options, headers });
 
   if (!response.ok) {
     const errData = await response.json().catch(() => ({}));

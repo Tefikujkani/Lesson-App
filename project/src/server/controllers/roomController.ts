@@ -22,7 +22,14 @@ export async function createRoom(req: AuthedRequest, res: Response, next: NextFu
 
     const nameRaw = typeof req.body?.name === "string" ? req.body.name.trim() : "";
     const topicRaw = typeof req.body?.topic === "string" ? req.body.topic.trim() : "";
-    const name = nameRaw || "Group Study Room";
+    if (!nameRaw || !topicRaw) {
+      res.status(400).json({
+        error: "Bad Request",
+        message: "Room name and study topic are required.",
+      });
+      return;
+    }
+    const name = nameRaw;
     const topic = topicRaw.slice(0, 200);
 
     let code = generateRoomCode();
