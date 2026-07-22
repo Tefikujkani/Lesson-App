@@ -216,7 +216,7 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
             </div>
             <div className="flex space-x-3">
               <button
-                onClick={fetchQuiz}
+                onClick={() => void fetchQuiz()}
                 className="bg-[#0c1a1f] hover:bg-[#076b5c] text-white px-5 py-2.5 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md flex items-center space-x-2"
               >
                 <RefreshCw className="w-3.5 h-3.5" />
@@ -372,7 +372,7 @@ export function QuizModal({ lectureTitle, lectureContext, onClose }: QuizModalPr
 
             <div className="flex space-x-3 w-full max-w-md">
               <button
-                onClick={fetchQuiz}
+                onClick={() => void fetchQuiz()}
                 className="flex-1 bg-[#0c1a1f] hover:bg-[#076b5c] text-white py-3 rounded-lg text-xs uppercase tracking-widest font-bold transition-all shadow-md flex items-center justify-center space-x-2"
               >
                 <RefreshCw className="w-4 h-4" />

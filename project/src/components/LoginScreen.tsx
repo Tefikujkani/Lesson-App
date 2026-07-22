@@ -24,25 +24,88 @@ declare global {
   }
 }
 
-function loadGoogleScript(): Promise<void> {
+function isInAppBrowser(): boolean {
+  const ua = navigator.userAgent || "";
+  return /FBAN|FBAV|Instagram|Line\/|Snapchat|Bytedance|TikTok|Twitter|MicroMessenger|WhatsApp|Discord/i.test(
+    ua
+  );
+}
+
+function getGoogleRedirectUri(): string {
+  // Must match an Authorized redirect URI in Google Cloud Console exactly.
+  return `${window.location.origin}/`;
+}
+
+function startGoogleRedirect(clientId: string) {
+  const nonce =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  sessionStorage.setItem("google_oauth_nonce", nonce);
+  const params = new URLSearchParams({
+    client_id: clientId,
+    redirect_uri: getGoogleRedirectUri(),
+    response_type: "id_token",
+    scope: "openid email profile",
+    nonce,
+    prompt: "select_account",
+  });
+  window.location.assign(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
+}
+
+function consumeGoogleRedirectToken(): string | null {
+  const hash = window.location.hash.startsWith("#")
+    ? window.location.hash.slice(1)
+    : window.location.hash;
+  if (!hash || !hash.includes("id_token=")) return null;
+  const params = new URLSearchParams(hash);
+  const idToken = params.get("id_token");
+  // Remove tokens from the address bar
+  window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}`);
+  return idToken;
+}
+
+function waitForGoogleApi(timeoutMs = 6000): Promise<void> {
   return new Promise((resolve, reject) => {
     if (window.google?.accounts?.id) {
       resolve();
       return;
     }
-    const existing = document.getElementById("google-gsi");
-    if (existing) {
-      existing.addEventListener("load", () => resolve());
-      existing.addEventListener("error", () => reject(new Error("Failed to load Google script")));
-      return;
-    }
+    const started = Date.now();
+    const timer = window.setInterval(() => {
+      if (window.google?.accounts?.id) {
+        window.clearInterval(timer);
+        resolve();
+        return;
+      }
+      if (Date.now() - started >= timeoutMs) {
+        window.clearInterval(timer);
+        reject(new Error("Google sign-in script timed out."));
+      }
+    }, 100);
+  });
+}
+
+function loadGoogleScript(): Promise<void> {
+  if (window.google?.accounts?.id) {
+    return Promise.resolve();
+  }
+
+  const existing = document.getElementById("google-gsi") as HTMLScriptElement | null;
+  if (existing) {
+    return waitForGoogleApi();
+  }
+
+  return new Promise((resolve, reject) => {
     const script = document.createElement("script");
     script.id = "google-gsi";
     script.src = "https://accounts.google.com/gsi/client";
     script.async = true;
     script.defer = true;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load Google script"));
+    script.onload = () => {
+      waitForGoogleApi().then(resolve).catch(reject);
+    };
+    script.onerror = () => reject(new Error("Could not load Google’s sign-in script."));
     document.head.appendChild(script);
   });
 }
@@ -56,7 +119,9 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
   const [loading, setLoading] = useState(false);
   const [googleReady, setGoogleReady] = useState(false);
   const [googleClientId, setGoogleClientId] = useState<string | null | undefined>(undefined);
+  const [useRedirectGoogle, setUseRedirectGoogle] = useState(false);
   const googleBtnRef = useRef<HTMLDivElement>(null);
+  const handledRedirectRef = useRef(false);
 
   const finishGoogleLogin = async (idToken: string) => {
     setLoading(true);
@@ -75,10 +140,20 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
     }
   };
 
+  // Handle return from Google OAuth redirect (id_token in URL hash)
+  useEffect(() => {
+    if (handledRedirectRef.current) return;
+    const idToken = consumeGoogleRedirectToken();
+    if (!idToken) return;
+    handledRedirectRef.current = true;
+    void finishGoogleLogin(idToken);
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
 
     (async () => {
+      setGoogleReady(false);
       try {
         const config = await apiFetch<{ googleClientId: string | null }>("/api/auth/config");
         if (cancelled) return;
@@ -87,22 +162,39 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
           return;
         }
         setGoogleClientId(config.googleClientId);
-        await loadGoogleScript();
-        if (cancelled || !window.google?.accounts?.id) return;
 
-        window.google.accounts.id.initialize({
-          client_id: config.googleClientId,
-          callback: (response: { credential?: string }) => {
-            if (response.credential) {
-              void finishGoogleLogin(response.credential);
-            }
-          },
-          auto_select: false,
-          cancel_on_tap_outside: true,
-        });
-        setGoogleReady(true);
+        // In-app browsers often block the GSI script — use redirect instead.
+        if (isInAppBrowser()) {
+          setUseRedirectGoogle(true);
+          return;
+        }
+
+        try {
+          await loadGoogleScript();
+          if (cancelled) return;
+          if (!window.google?.accounts?.id) {
+            setUseRedirectGoogle(true);
+            return;
+          }
+
+          window.google.accounts.id.initialize({
+            client_id: config.googleClientId,
+            callback: (response: { credential?: string }) => {
+              if (response.credential) {
+                void finishGoogleLogin(response.credential);
+              }
+            },
+            auto_select: false,
+            cancel_on_tap_outside: true,
+            use_fedcm_for_prompt: false,
+          });
+          if (!cancelled) setGoogleReady(true);
+        } catch {
+          if (!cancelled) setUseRedirectGoogle(true);
+        }
       } catch (err) {
         console.error("Google sign-in setup failed:", err);
+        if (!cancelled) setUseRedirectGoogle(true);
       }
     })();
 
@@ -225,6 +317,15 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
             <div className="space-y-3">
               {googleReady ? (
                 <div className="login-google-slot" ref={googleBtnRef} />
+              ) : useRedirectGoogle ? (
+                <button
+                  type="button"
+                  className="w-full rounded-xl border border-[#c5d5da] bg-white px-3 py-3 text-sm font-semibold text-[#1f2d32] shadow-sm hover:bg-[#f7fbf9]"
+                  onClick={() => startGoogleRedirect(googleClientId)}
+                  disabled={loading}
+                >
+                  Continue with Google
+                </button>
               ) : (
                 <p className="login-google-loading">Loading Google sign-in…</p>
               )}
