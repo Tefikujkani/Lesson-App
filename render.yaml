@@ -1,0 +1,24 @@
+# NoteLab — Render Blueprint
+# Deploy: https://dashboard.render.com/blueprints → New Blueprint Instance
+# Repo: https://github.com/Tefikujkani/Lesson-App
+
+services:
+  - type: web
+    name: notelab
+    runtime: node
+    plan: free
+    rootDir: project
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: GROQ_API_KEY
+        sync: false
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
