@@ -72,7 +72,19 @@ async function startServer() {
     const distPath = path.join(process.cwd(), "dist");
     
     // Serve static files from the Vite production build folder
-    app.use(express.static(distPath));
+    app.use(
+      express.static(distPath, {
+        setHeaders(res, filePath) {
+          if (filePath.endsWith("manifest.webmanifest")) {
+            res.setHeader("Content-Type", "application/manifest+json");
+          }
+          if (filePath.endsWith(`${path.sep}sw.js`) || filePath.endsWith("/sw.js")) {
+            res.setHeader("Cache-Control", "no-cache");
+            res.setHeader("Service-Worker-Allowed", "/");
+          }
+        },
+      })
+    );
     
     // All other GET requests fall back to index.html (skip API paths)
     app.get("*", (req: Request, res: Response, next: NextFunction) => {
