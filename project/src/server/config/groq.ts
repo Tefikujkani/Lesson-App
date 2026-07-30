@@ -7,9 +7,9 @@ dotenv.config({ path: ".env.local", override: true });
 export const GROQ_CHAT_MODEL =
   process.env.GROQ_MODEL || "llama-3.3-70b-versatile";
 
-/** Image / multimodal uploads */
+/** Image / multimodal uploads (Llama 4 Scout was decommissioned on Groq) */
 export const GROQ_VISION_MODEL =
-  process.env.GROQ_VISION_MODEL || "meta-llama/llama-4-scout-17b-16e-instruct";
+  process.env.GROQ_VISION_MODEL || "qwen/qwen3.6-27b";
 
 type ChatMessage =
   | { role: "system" | "user" | "assistant"; content: string }
