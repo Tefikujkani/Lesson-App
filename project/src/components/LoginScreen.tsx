@@ -5,6 +5,7 @@ import { User } from "../types.ts";
 import { apiFetch, setAuthSession } from "../lib/api.ts";
 import { BloomFlower } from "./BloomFlower.tsx";
 import { TurningBook } from "./TurningBook.tsx";
+import { InstallAppButton } from "./InstallAppButton.tsx";
 
 interface LoginScreenProps {
   onLoginSuccess: (user: User) => void;
@@ -405,6 +406,8 @@ export function LoginScreen({ onLoginSuccess }: LoginScreenProps) {
               {isSignUp ? "Already have an account? Sign in" : "New here? Create an account"}
             </button>
           </div>
+
+          <InstallAppButton className="mt-4" />
         </div>
       </motion.div>
     </div>
