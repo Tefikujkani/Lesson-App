@@ -13,6 +13,7 @@ import {
 import { requireAuth, optionalAuth } from "../middleware/auth.ts";
 import { createRoom, getRoomByCode } from "../controllers/roomController.ts";
 import { askRoomAi } from "../controllers/roomAiController.ts";
+import { getIceConfig } from "../config/ice.ts";
 
 const router: Router = express.Router();
 
@@ -38,6 +39,7 @@ router.put("/chat/:lectureId", requireAuth, saveChatHistory);
 router.post("/rooms", requireAuth, createRoom);
 router.get("/rooms/:code", requireAuth, getRoomByCode);
 router.post("/rooms/ai", requireAuth, askRoomAi);
+router.get("/ice", getIceConfig);
 
 /**
  * AI routes — optional auth so guest demos still work;

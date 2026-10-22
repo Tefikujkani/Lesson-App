@@ -655,6 +655,26 @@ export function attachRoomSocket(httpServer: HttpServer): Server {
       io.to(`room:${code}`).emit("room:members", { members: snapshotMembers(code) });
     });
 
+    /** Fallback voice: PCM frames when WebRTC/TURN cannot connect */
+    socket.on("voice:pcm", (payload: unknown) => {
+      const code = (socket.data as { roomCode?: string }).roomCode;
+      if (!code) return;
+      const me = snapshotMembers(code).find((m) => m.socketId === socket.id);
+      if (!me?.inVoice || me.forceMuted) return;
+      let buf: Buffer | null = null;
+      if (Buffer.isBuffer(payload)) buf = payload;
+      else if (payload instanceof ArrayBuffer) buf = Buffer.from(payload);
+      else if (ArrayBuffer.isView(payload)) {
+        const view = payload as ArrayBufferView;
+        buf = Buffer.from(view.buffer, view.byteOffset, view.byteLength);
+      }
+      if (!buf || buf.length < 2 || buf.length > 64_000) return;
+      socket.volatile.to(`room:${code}`).emit("voice:pcm", {
+        fromSocketId: socket.id,
+        data: buf,
+      });
+    });
+
     /** Host-only: kick a student out of the room */
     socket.on(
       "room:kick",
