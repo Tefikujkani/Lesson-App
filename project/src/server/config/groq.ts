@@ -124,7 +124,7 @@ async function callGroqOnce(options: ChatCompletionOptions & { model: string }):
     model: options.model,
     messages: options.messages,
     temperature: options.temperature ?? 0.7,
-    max_completion_tokens: options.json ? 4096 : 2048,
+    max_completion_tokens: 900,
   };
 
   if (options.json) {
